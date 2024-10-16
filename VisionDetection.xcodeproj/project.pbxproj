@@ -17,6 +17,8 @@
 		94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */; };
 		94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */; };
 		94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */; };
+		94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */; };
+		94B279D92CC01F4700D41BD0 /* MLInferenceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		94B279D12CBF973700D41BD0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryViewController.swift; sourceTree = "<group>"; };
 		94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaliHelperViewController.swift; sourceTree = "<group>"; };
+		94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCaliViewController.swift; sourceTree = "<group>"; };
+		94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLInferenceUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,8 @@
 				94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */,
 				94B279D12CBF973700D41BD0 /* README.md */,
 				94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */,
+				94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */,
+				94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */,
 			);
 			path = VisionDetection;
 			sourceTree = "<group>";
@@ -154,9 +160,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */,
+				94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */,
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
 				94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */,
 				94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */,
+				94B279D92CC01F4700D41BD0 /* MLInferenceUtil.swift in Sources */,
 				02611D941EEA5317009714B8 /* AppDelegate.swift in Sources */,
 				02611DA61EEA5683009714B8 /* PreviewView.swift in Sources */,
 				2849C929220ABCBE000977F1 /* Extensions.swift in Sources */,

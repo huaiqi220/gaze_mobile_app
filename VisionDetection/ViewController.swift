@@ -16,11 +16,11 @@ class ViewController: UIViewController{
         super.viewDidLoad()
         view.backgroundColor = .white
         // 创建按钮1
-        let button1 = UIButton(type: .system)
-        button1.setTitle("采集校准数据", for: .normal)
-        button1.frame = CGRect(x: 100, y: 200, width: 200, height: 50)
-        button1.addTarget(self, action: #selector(button1Tapped), for: .touchUpInside)
-        view.addSubview(button1)
+        let CaliVCButton = UIButton(type: .system)
+        CaliVCButton.setTitle("采集校准数据", for: .normal)
+        CaliVCButton.frame = CGRect(x: 100, y: 200, width: 200, height: 50)
+        CaliVCButton.addTarget(self, action: #selector(button1Tapped), for: .touchUpInside)
+        view.addSubview(CaliVCButton)
 
 
         let showImages = UIButton(type: .system)
@@ -28,16 +28,22 @@ class ViewController: UIViewController{
         showImages.frame = CGRect(x: 100, y: 300, width: 200, height: 50)
         showImages.addTarget(self, action: #selector(showImagesTapped), for: .touchUpInside)
         view.addSubview(showImages)
+        
+        let computeCaliParam = UIButton(type: .system)
+        computeCaliParam.setTitle("计算校准向量", for: .normal)
+        computeCaliParam.frame = CGRect(x: 100, y: 400, width: 200, height: 50)
+        computeCaliParam.addTarget(self, action: #selector(showModelCaliVCTapped), for: .touchUpInside)
+        view.addSubview(computeCaliParam)
 
         // 创建按钮2
         let button2 = UIButton(type: .system)
         button2.setTitle("开始正式推理", for: .normal)
-        button2.frame = CGRect(x: 100, y: 400, width: 200, height: 50)
+        button2.frame = CGRect(x: 100, y: 500, width: 200, height: 50)
         button2.addTarget(self, action: #selector(button2Tapped), for: .touchUpInside)
         view.addSubview(button2)
     }
     
-    // 按钮1的点击事件
+    // 校准数据采集按钮事件
     @objc func button1Tapped() {
         print("开始采集校准数据")
         let cameraVC = CaliHelperViewController()
@@ -52,6 +58,15 @@ class ViewController: UIViewController{
         imagesVC.modalPresentationStyle = .fullScreen
 //        present(imagesVC, animated: true, completion: nil)
         navigationController?.pushViewController(imagesVC, animated: true)
+    }
+    
+    
+    @objc func showModelCaliVCTapped(){
+        print("打开模型微调界面")
+        let caliModelVC = ModelCaliViewController()
+        caliModelVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(caliModelVC, animated: true)
+        
     }
 
     // 按钮2的点击事件
