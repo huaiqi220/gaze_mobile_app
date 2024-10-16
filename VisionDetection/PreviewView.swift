@@ -2,8 +2,8 @@
 //  PreviewView.swift
 //  VisionDetection
 //
-//  Created by Wei Chieh Tseng on 09/06/2017.
-//  Copyright © 2017 Willjay. All rights reserved.
+//  Created by zhuziyang on 2024/10/16.
+//  Copyright © 2024 Willjay. All rights reserved.
 //
 
 import UIKit

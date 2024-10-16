@@ -22,12 +22,18 @@ class CameraViewController: UIViewController {
     // 记录点击的当前按钮，用于在拍照时标识来源
     var currentButton: UIButton?
     
+    // 存储用户输入的case_id
+    var caseID: String?
+    
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        
+        // 弹出对话框要求用户输入 case_id
 
+        
         // 设置相机捕捉会话
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = .photo
@@ -76,6 +82,7 @@ class CameraViewController: UIViewController {
 //        view.addSubview(captureButton)
         createButtons()
     }
+    
     
     func createButtons(){
         // 这里是屏幕九个校准点的位置数据
@@ -151,7 +158,7 @@ class CameraViewController: UIViewController {
         let alert = UIAlertController(title: "完成", message: "数据采集完成", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "确定", style: .default) { _ in
             // 返回主界面
-            self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popToRootViewController(animated: true)
         }
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
@@ -180,15 +187,16 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         let fileName = "photo_\(buttonTag)_\(UUID().uuidString).jpg"
         print("保存图片的文件名: \(fileName)")
         
-        // 保存图片到相册
-//        UIImageWriteToSavedPhotosAlbum(capturedImage!, nil, nil, nil)
-        // 保存到自定义目录 "images/cali"
-        saveImageToCustomDirectory(image: capturedImage!, fileName: fileName)
-        print("图片已保存")
+        // 保存到自定义目录 "images/cali/{case_id}"
+        if let caseID = caseID {
+            saveImageToCustomDirectory(image: capturedImage!, fileName: fileName, caseID: caseID)
+        } else {
+            print("Case ID 为空，无法保存图片")
+        }
     }
     
     // 保存图片到自定义目录
-    func saveImageToCustomDirectory(image: UIImage, fileName: String) {
+    func saveImageToCustomDirectory(image: UIImage, fileName: String, caseID: String) {
         // 获取沙盒中的 Document 目录
         let fileManager = FileManager.default
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -196,8 +204,8 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
             return
         }
         
-        // 创建自定义目录 "images/cali"
-        let customDir = documentsDirectory.appendingPathComponent("images/cali")
+        // 创建自定义目录 "images/cali/{case_id}"
+        let customDir = documentsDirectory.appendingPathComponent("images/cali/\(caseID)")
         if !fileManager.fileExists(atPath: customDir.path) {
             do {
                 try fileManager.createDirectory(at: customDir, withIntermediateDirectories: true, attributes: nil)
@@ -209,7 +217,7 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
 
         // 保存文件到自定义目录
         let fileURL = customDir.appendingPathComponent(fileName)
-        if let imageData =  UIImageJPEGRepresentation(image, 1.0) {
+        if let imageData = UIImageJPEGRepresentation(image, 1.0) {
             do {
                 try imageData.write(to: fileURL)
                 print("图片已保存到: \(fileURL.path)")
