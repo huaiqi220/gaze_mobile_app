@@ -19,6 +19,8 @@
 		94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */; };
 		94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */; };
 		94B279D92CC01F4700D41BD0 /* MLInferenceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */; };
+		94B279DB2CC0A75D00D41BD0 /* ImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279DA2CC0A75D00D41BD0 /* ImageUtil.swift */; };
+		94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279E22CC0B67600D41BD0 /* testViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaliHelperViewController.swift; sourceTree = "<group>"; };
 		94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCaliViewController.swift; sourceTree = "<group>"; };
 		94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLInferenceUtil.swift; sourceTree = "<group>"; };
+		94B279DA2CC0A75D00D41BD0 /* ImageUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtil.swift; sourceTree = "<group>"; };
+		94B279E22CC0B67600D41BD0 /* testViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,22 +73,48 @@
 		02611D921EEA5317009714B8 /* VisionDetection */ = {
 			isa = PBXGroup;
 			children = (
-				94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */,
+				94B279E62CC0D70D00D41BD0 /* VC */,
+				94B279E42CC0D6E900D41BD0 /* Util */,
+				94B279DD2CC0B3CD00D41BD0 /* model */,
 				02611D931EEA5317009714B8 /* AppDelegate.swift */,
-				02611D951EEA5317009714B8 /* ViewController.swift */,
 				2849C928220ABCBE000977F1 /* Extensions.swift */,
 				02611DA51EEA5683009714B8 /* PreviewView.swift */,
 				02611D971EEA5317009714B8 /* Main.storyboard */,
 				02611D9A1EEA5317009714B8 /* Assets.xcassets */,
 				02611D9C1EEA5317009714B8 /* LaunchScreen.storyboard */,
 				02611D9F1EEA5317009714B8 /* Info.plist */,
-				94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */,
 				94B279D12CBF973700D41BD0 /* README.md */,
-				94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */,
-				94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */,
-				94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */,
 			);
 			path = VisionDetection;
+			sourceTree = "<group>";
+		};
+		94B279DD2CC0B3CD00D41BD0 /* model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		94B279E42CC0D6E900D41BD0 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */,
+				94B279DA2CC0A75D00D41BD0 /* ImageUtil.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		94B279E62CC0D70D00D41BD0 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				94B279E22CC0B67600D41BD0 /* testViewController.swift */,
+				94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */,
+				94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */,
+				94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */,
+				02611D951EEA5317009714B8 /* ViewController.swift */,
+				94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */,
+			);
+			path = VC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,7 +190,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */,
+				94B279DB2CC0A75D00D41BD0 /* ImageUtil.swift in Sources */,
 				94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */,
+				94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */,
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
 				94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */,
 				94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */,

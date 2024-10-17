@@ -41,6 +41,13 @@ class ViewController: UIViewController{
         button2.frame = CGRect(x: 100, y: 500, width: 200, height: 50)
         button2.addTarget(self, action: #selector(button2Tapped), for: .touchUpInside)
         view.addSubview(button2)
+        
+        // 创建按钮2
+        let buttonTest = UIButton(type: .system)
+        buttonTest.setTitle("debug测试页面", for: .normal)
+        buttonTest.frame = CGRect(x: 100, y: 600, width: 200, height: 50)
+        buttonTest.addTarget(self, action: #selector(buttonTestTapped), for: .touchUpInside)
+        view.addSubview(buttonTest)
     }
     
     // 校准数据采集按钮事件
@@ -72,6 +79,13 @@ class ViewController: UIViewController{
     // 按钮2的点击事件
     @objc func button2Tapped() {
         print("按钮2被点击")
+    }
+    
+    @objc func buttonTestTapped(){
+        let testVC = testViewController()
+        testVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(testVC, animated: true)
+        print("打开了测试页面")
     }
     
     
