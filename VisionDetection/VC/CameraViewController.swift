@@ -193,37 +193,6 @@ extension CameraViewController: AVCapturePhotoCaptureDelegate {
         } else {
             print("Case ID 为空，无法保存图片")
         }
-    }
-    
-    // 保存图片到自定义目录
-    func saveImageToCustomDirectory(image: UIImage, fileName: String, caseID: String) {
-        // 获取沙盒中的 Document 目录
-        let fileManager = FileManager.default
-        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("无法访问文档目录")
-            return
-        }
-        
-        // 创建自定义目录 "images/cali/{case_id}"
-        let customDir = documentsDirectory.appendingPathComponent("images/cali/\(caseID)")
-        if !fileManager.fileExists(atPath: customDir.path) {
-            do {
-                try fileManager.createDirectory(at: customDir, withIntermediateDirectories: true, attributes: nil)
-                print("创建目录: \(customDir.path)")
-            } catch {
-                print("创建目录失败: \(error)")
-            }
-        }
+    }    
 
-        // 保存文件到自定义目录
-        let fileURL = customDir.appendingPathComponent(fileName)
-        if let imageData = UIImageJPEGRepresentation(image, 1.0) {
-            do {
-                try imageData.write(to: fileURL)
-                print("图片已保存到: \(fileURL.path)")
-            } catch {
-                print("保存图片失败: \(error)")
-            }
-        }
-    }
 }

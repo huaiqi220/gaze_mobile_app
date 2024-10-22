@@ -14,6 +14,13 @@
 		02611D9E1EEA5317009714B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02611D9C1EEA5317009714B8 /* LaunchScreen.storyboard */; };
 		02611DA61EEA5683009714B8 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02611DA51EEA5683009714B8 /* PreviewView.swift */; };
 		2849C929220ABCBE000977F1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2849C928220ABCBE000977F1 /* Extensions.swift */; };
+		9477DB642CC679C100C40251 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB632CC679C100C40251 /* opencv2.framework */; };
+		9477DB672CC679EA00C40251 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB662CC679EA00C40251 /* AssetsLibrary.framework */; };
+		9477DB692CC679F400C40251 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB682CC679F400C40251 /* CoreGraphics.framework */; };
+		9477DB6B2CC679FB00C40251 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB6A2CC679FB00C40251 /* CoreMedia.framework */; };
+		9477DB6D2CC67A0400C40251 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB6C2CC67A0400C40251 /* Accelerate.framework */; };
+		9477DB6F2CC67A0C00C40251 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB6E2CC67A0C00C40251 /* CoreFoundation.framework */; };
+		9477DB732CC67DDF00C40251 /* OpenCVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9477DB722CC67DDF00C40251 /* OpenCVWrapper.mm */; };
 		94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */; };
 		94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */; };
 		94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */; };
@@ -33,6 +40,16 @@
 		02611D9F1EEA5317009714B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02611DA51EEA5683009714B8 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		2849C928220ABCBE000977F1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		9477DB632CC679C100C40251 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		9477DB662CC679EA00C40251 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		9477DB682CC679F400C40251 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9477DB6A2CC679FB00C40251 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		9477DB6C2CC67A0400C40251 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		9477DB6E2CC67A0C00C40251 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		9477DB702CC67DDE00C40251 /* VisionDetection-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VisionDetection-Bridging-Header.h"; sourceTree = "<group>"; };
+		9477DB712CC67DDF00C40251 /* OpenCVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVWrapper.h; sourceTree = "<group>"; };
+		9477DB722CC67DDF00C40251 /* OpenCVWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCVWrapper.mm; sourceTree = "<group>"; };
+		9477DB742CC67E4400C40251 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		94B279D12CBF973700D41BD0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +65,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9477DB6F2CC67A0C00C40251 /* CoreFoundation.framework in Frameworks */,
+				9477DB6D2CC67A0400C40251 /* Accelerate.framework in Frameworks */,
+				9477DB6B2CC679FB00C40251 /* CoreMedia.framework in Frameworks */,
+				9477DB692CC679F400C40251 /* CoreGraphics.framework in Frameworks */,
+				9477DB672CC679EA00C40251 /* AssetsLibrary.framework in Frameworks */,
+				9477DB642CC679C100C40251 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,8 +80,13 @@
 		02611D871EEA5317009714B8 = {
 			isa = PBXGroup;
 			children = (
+				9477DB742CC67E4400C40251 /* PrefixHeader.pch */,
+				9477DB712CC67DDF00C40251 /* OpenCVWrapper.h */,
+				9477DB722CC67DDF00C40251 /* OpenCVWrapper.mm */,
 				02611D921EEA5317009714B8 /* VisionDetection */,
 				02611D911EEA5317009714B8 /* Products */,
+				9477DB652CC679EA00C40251 /* Frameworks */,
+				9477DB702CC67DDE00C40251 /* VisionDetection-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +101,7 @@
 		02611D921EEA5317009714B8 /* VisionDetection */ = {
 			isa = PBXGroup;
 			children = (
+				9477DB632CC679C100C40251 /* opencv2.framework */,
 				94B279E62CC0D70D00D41BD0 /* VC */,
 				94B279E42CC0D6E900D41BD0 /* Util */,
 				94B279DD2CC0B3CD00D41BD0 /* model */,
@@ -86,6 +115,18 @@
 				94B279D12CBF973700D41BD0 /* README.md */,
 			);
 			path = VisionDetection;
+			sourceTree = "<group>";
+		};
+		9477DB652CC679EA00C40251 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9477DB6E2CC67A0C00C40251 /* CoreFoundation.framework */,
+				9477DB6C2CC67A0400C40251 /* Accelerate.framework */,
+				9477DB6A2CC679FB00C40251 /* CoreMedia.framework */,
+				9477DB682CC679F400C40251 /* CoreGraphics.framework */,
+				9477DB662CC679EA00C40251 /* AssetsLibrary.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		94B279DD2CC0B3CD00D41BD0 /* model */ = {
@@ -149,6 +190,7 @@
 				TargetAttributes = {
 					02611D8F1EEA5317009714B8 = {
 						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 1520;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -191,6 +233,7 @@
 			files = (
 				94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */,
 				94B279DB2CC0A75D00D41BD0 /* ImageUtil.swift in Sources */,
+				9477DB732CC67DDF00C40251 /* OpenCVWrapper.mm in Sources */,
 				94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */,
 				94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */,
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
@@ -332,15 +375,24 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = J7794Q7UGX;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/VisionDetection",
+				);
+				GCC_PREFIX_HEADER = "$(SRCROOT)/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = VisionDetection/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhuz1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "VisionDetection-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -350,12 +402,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = J7794Q7UGX;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/VisionDetection",
+				);
+				GCC_PREFIX_HEADER = "$(SRCROOT)/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = VisionDetection/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhuz1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "VisionDetection-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

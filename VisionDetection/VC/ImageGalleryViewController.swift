@@ -103,16 +103,25 @@ class ImageGalleryViewController: UIViewController, UICollectionViewDataSource, 
             label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
             cell.contentView.addSubview(label)
         } else {
-            // 图片模式下展示图片
+            // 图片模式下展示图片和文件名
             let imageView = UIImageView(image: images[indexPath.item])
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
-            imageView.frame = cell.contentView.bounds
+            imageView.frame = CGRect(x: 0, y: 0, width: cell.contentView.bounds.width, height: cell.contentView.bounds.height * 0.8)
             cell.contentView.addSubview(imageView)
+
+            // 添加文件名标签
+            let label = UILabel(frame: CGRect(x: 0, y: cell.contentView.bounds.height * 0.8, width: cell.contentView.bounds.width, height: cell.contentView.bounds.height * 0.2))
+            label.text = imageNames[indexPath.item]  // 设置文件名
+            label.textAlignment = .center
+            label.textColor = .black
+            label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+            cell.contentView.addSubview(label)
         }
         
         return cell
     }
+
 
     // UICollectionViewDelegate 方法
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
