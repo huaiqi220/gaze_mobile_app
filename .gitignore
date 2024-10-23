@@ -3,7 +3,6 @@
 */*.framework/*
 *.xcuserstate
 VisionDetection.xcodeproj/project.xcworkspace/xcuserdata/zhuz1.xcuserdatad/UserInterfaceState.xcuserstate
-VisionDetection.xcodeproj/project.xcworkspace/xcuserdata/zhuz1.xcuserdatad/UserInterfaceState.xcuserstate
 
 
 # Xcode 自动生成的工作区数据
@@ -55,3 +54,8 @@ playground.xcworkspace
 *.swp
 *.lock
 
+
+#VSCode相关文件
+.vscode
+*/.vscode
+*/.vscode/*
