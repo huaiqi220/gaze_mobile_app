@@ -15,6 +15,9 @@
 		02611DA61EEA5683009714B8 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02611DA51EEA5683009714B8 /* PreviewView.swift */; };
 		2849C929220ABCBE000977F1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2849C928220ABCBE000977F1 /* Extensions.swift */; };
 		9471BC8D2CC8D050008E7A05 /* aff_net.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 9471BC8C2CC8D050008E7A05 /* aff_net.mlpackage */; };
+		9471BC8F2CC92D29008E7A05 /* dataUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471BC8E2CC92D29008E7A05 /* dataUtil.swift */; };
+		9471BC912CC92F3F008E7A05 /* ModelPredictViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471BC902CC92F3F008E7A05 /* ModelPredictViewController.swift */; };
+		9471BC932CC932EF008E7A05 /* PredictHelperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471BC922CC932EF008E7A05 /* PredictHelperViewController.swift */; };
 		9477DB642CC679C100C40251 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB632CC679C100C40251 /* opencv2.framework */; };
 		9477DB672CC679EA00C40251 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB662CC679EA00C40251 /* AssetsLibrary.framework */; };
 		9477DB692CC679F400C40251 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB682CC679F400C40251 /* CoreGraphics.framework */; };
@@ -42,6 +45,9 @@
 		02611DA51EEA5683009714B8 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		2849C928220ABCBE000977F1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9471BC8C2CC8D050008E7A05 /* aff_net.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = aff_net.mlpackage; sourceTree = "<group>"; };
+		9471BC8E2CC92D29008E7A05 /* dataUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dataUtil.swift; sourceTree = "<group>"; };
+		9471BC902CC92F3F008E7A05 /* ModelPredictViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPredictViewController.swift; sourceTree = "<group>"; };
+		9471BC922CC932EF008E7A05 /* PredictHelperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictHelperViewController.swift; sourceTree = "<group>"; };
 		9477DB632CC679C100C40251 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		9477DB662CC679EA00C40251 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		9477DB682CC679F400C40251 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -89,6 +95,7 @@
 				02611D911EEA5317009714B8 /* Products */,
 				9477DB652CC679EA00C40251 /* Frameworks */,
 				9477DB702CC67DDE00C40251 /* VisionDetection-Bridging-Header.h */,
+				94B279D12CBF973700D41BD0 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,7 +121,6 @@
 				02611D9A1EEA5317009714B8 /* Assets.xcassets */,
 				02611D9C1EEA5317009714B8 /* LaunchScreen.storyboard */,
 				02611D9F1EEA5317009714B8 /* Info.plist */,
-				94B279D12CBF973700D41BD0 /* README.md */,
 			);
 			path = VisionDetection;
 			sourceTree = "<group>";
@@ -144,6 +150,7 @@
 			children = (
 				94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */,
 				94B279DA2CC0A75D00D41BD0 /* ImageUtil.swift */,
+				9471BC8E2CC92D29008E7A05 /* dataUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -157,6 +164,8 @@
 				94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */,
 				02611D951EEA5317009714B8 /* ViewController.swift */,
 				94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */,
+				9471BC902CC92F3F008E7A05 /* ModelPredictViewController.swift */,
+				9471BC922CC932EF008E7A05 /* PredictHelperViewController.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -236,12 +245,15 @@
 			files = (
 				94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */,
 				94B279DB2CC0A75D00D41BD0 /* ImageUtil.swift in Sources */,
+				9471BC932CC932EF008E7A05 /* PredictHelperViewController.swift in Sources */,
 				9477DB732CC67DDF00C40251 /* OpenCVWrapper.mm in Sources */,
+				9471BC8F2CC92D29008E7A05 /* dataUtil.swift in Sources */,
 				94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */,
 				94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */,
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
 				94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */,
 				9471BC8D2CC8D050008E7A05 /* aff_net.mlpackage in Sources */,
+				9471BC912CC92F3F008E7A05 /* ModelPredictViewController.swift in Sources */,
 				94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */,
 				94B279D92CC01F4700D41BD0 /* MLInferenceUtil.swift in Sources */,
 				02611D941EEA5317009714B8 /* AppDelegate.swift in Sources */,

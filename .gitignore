@@ -1,3 +1,57 @@
 *.framework
 */*.framework
 */*.framework/*
+*.xcuserstate
+VisionDetection.xcodeproj/project.xcworkspace/xcuserdata/zhuz1.xcuserdatad/UserInterfaceState.xcuserstate
+VisionDetection.xcodeproj/project.xcworkspace/xcuserdata/zhuz1.xcuserdatad/UserInterfaceState.xcuserstate
+
+
+# Xcode 自动生成的工作区数据
+xcuserdata/
+*.xcscmblueprint
+
+# 构建文件夹
+build/
+DerivedData/
+
+# iOS 及 macOS 相关
+*.ipa
+*.app
+*.dSYM
+*.xcarchive
+
+# Swift Package Manager
+Packages/
+.swiftpm/
+Package.resolved
+
+# CocoaPods 相关
+Pods/
+Podfile.lock
+
+# Carthage 相关
+Carthage/Build/
+Carthage/Checkouts/
+
+# 隐私文件或用户敏感信息
+*.keychain
+*.plist
+*.mobileprovision
+
+# 快照测试生成的文件
+*.snap
+*.orig
+
+# 编译日志
+*.log
+
+# Playground 自动生成的文件
+timeline.xctimeline
+playground.xcworkspace
+
+# 其他 macOS 系统文件
+.DS_Store
+.Trashes
+*.swp
+*.lock
+

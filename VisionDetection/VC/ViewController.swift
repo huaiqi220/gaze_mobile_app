@@ -36,11 +36,11 @@ class ViewController: UIViewController{
         view.addSubview(computeCaliParam)
 
         // 创建按钮2
-        let button2 = UIButton(type: .system)
-        button2.setTitle("开始正式推理", for: .normal)
-        button2.frame = CGRect(x: 100, y: 500, width: 200, height: 50)
-        button2.addTarget(self, action: #selector(button2Tapped), for: .touchUpInside)
-        view.addSubview(button2)
+        let startPredict = UIButton(type: .system)
+        startPredict.setTitle("开始正式推理", for: .normal)
+        startPredict.frame = CGRect(x: 100, y: 500, width: 200, height: 50)
+        startPredict.addTarget(self, action: #selector(button2Tapped), for: .touchUpInside)
+        view.addSubview(startPredict)
         
         // 创建按钮2
         let buttonTest = UIButton(type: .system)
@@ -79,6 +79,10 @@ class ViewController: UIViewController{
     // 按钮2的点击事件
     @objc func button2Tapped() {
         print("按钮2被点击")
+        let predictVC = ModelPredictViewController()
+        predictVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(predictVC, animated: true)
+        
     }
     
     @objc func buttonTestTapped(){
