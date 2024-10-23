@@ -135,3 +135,56 @@ extension UIImage {
         return resizedImage ?? self
     }
 }
+
+extension UIImage {
+    func toMLFeatureValue() -> MLFeatureValue? {
+        guard let pixelBuffer = self.toCVPixelBuffer() else { return nil }
+        return MLFeatureValue(pixelBuffer: pixelBuffer)
+    }
+
+    // 将UIImage转换为CVPixelBuffer
+    func toCVPixelBuffer() -> CVPixelBuffer? {
+        let width = Int(self.size.width)
+        let height = Int(self.size.height)
+        
+        let attributes: [CFString: Any] = [
+            kCVPixelBufferCGImageCompatibilityKey: true,
+            kCVPixelBufferCGBitmapContextCompatibilityKey: true
+        ]
+        
+        var pixelBuffer: CVPixelBuffer?
+        let status = CVPixelBufferCreate(kCFAllocatorDefault,
+                                         width,
+                                         height,
+                                         kCVPixelFormatType_32ARGB,
+                                         attributes as CFDictionary,
+                                         &pixelBuffer)
+
+        guard status == kCVReturnSuccess, let buffer = pixelBuffer else {
+            return nil
+        }
+
+        CVPixelBufferLockBaseAddress(buffer, .readOnly)
+        let pixelData = CVPixelBufferGetBaseAddress(buffer)
+
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let context = CGContext(data: pixelData,
+                                width: width,
+                                height: height,
+                                bitsPerComponent: 8,
+                                bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
+                                space: colorSpace,
+                                bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue)
+
+        guard let cgImage = self.cgImage else {
+            CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
+            return nil
+        }
+
+        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
+
+        return buffer
+    }
+}
+

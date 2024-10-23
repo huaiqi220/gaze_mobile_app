@@ -107,7 +107,7 @@
 
 @implementation ImageProcessor
 
-+ (NSArray<UIImage *> *)preprocess:(UIImage *)image withFaceObservation:(VNFaceObservation *)faceObservation withSize:(CGSize)newSize interpolation:(int)interpolation {
++ (NSDictionary *)preprocess:(UIImage *)image withFaceObservation:(VNFaceObservation *)faceObservation withSize:(CGSize)newSize interpolation:(int)interpolation {
     // 将 UIImage 转换为 cv::Mat
     cv::Mat mat;
     [image convertToMat:&mat :false];
@@ -135,6 +135,9 @@
     VNFaceLandmarks2D *landmarks = faceObservation.landmarks;
     UIImage *leftEyeImage = nil;
     UIImage *rightEyeImage = nil;
+    cv::Mat resizedFace, resizedLeftEye, resizedRightEye;
+    
+    float rects[12] = {0};
     if (landmarks) {
         VNFaceLandmarkRegion2D *leftEye = landmarks.leftEye;
         VNFaceLandmarkRegion2D *rightEye = landmarks.rightEye;
@@ -154,8 +157,16 @@
 
             // 裁剪左眼图像
             cv::Mat leftEyeCrop = mat(leftEyeRect);
-            leftEyeImage = MatToUIImage(leftEyeCrop);
-
+            cv::resize(leftEyeCrop, resizedLeftEye, cv::Size(112, 112), 0, 0, interpolation);
+            resizedLeftEye.convertTo(resizedLeftEye, CV_32F, 1.0 / 255);
+//            leftEyeImage = MatToUIImage(leftEyeCrop);
+            leftEyeImage = MatToUIImage(resizedLeftEye);
+            
+            // 存储左眼矩形信息
+            rects[4] = leftEyeRect.x;
+            rects[5] = leftEyeRect.y;
+            rects[6] = leftEyeRect.width;
+            rects[7] = leftEyeRect.height;
             // 计算右眼边界框
             cv::Rect rightEyeRect = [self rectFromPointsInImage:[rightEye pointsInImageOfSize:imageSize] pointCount:rightEye.pointCount];
             rightEyeRect = cv::Rect(
@@ -171,24 +182,58 @@
 
             // 裁剪右眼图像
             cv::Mat rightEyeCrop = mat(rightEyeRect);
-            rightEyeImage = MatToUIImage(rightEyeCrop);
+            cv::resize(rightEyeCrop, resizedRightEye, cv::Size(112, 112), 0, 0, interpolation);
+//            rightEyeImage = MatToUIImage(rightEyeCrop);
+            resizedRightEye.convertTo(resizedRightEye, CV_32F, 1.0/255);
+            rightEyeImage = MatToUIImage(resizedRightEye);
+            
+            // 存储右眼矩形信息
+            rects[8] = rightEyeRect.x;
+            rects[9] = rightEyeRect.y;
+            rects[10] = rightEyeRect.width;
+            rects[11] = rightEyeRect.height;
         }
     }
 
     // 将面部裁剪转换为 UIImage
-//    UIImage *faceImage = [self matToUIImage:faceCrop];
-    UIImage *faceImage = MatToUIImage(faceCrop);
+    cv::resize(faceCrop, resizedFace, cv::Size(224, 224), 0, 0, interpolation);
+//    UIImage *faceImage = MatToUIImage(faceCrop);
+    resizedFace.convertTo(resizedFace, CV_32F, 1.0/255);
+    UIImage *faceImage = MatToUIImage(resizedFace);
+    
+    // 存储面部矩形信息
+    rects[0] = faceRect.x;
+    rects[1] = faceRect.y;
+    rects[2] = faceRect.width;
+    rects[3] = faceRect.height;
 
-    // 返回裁剪后的 UIImage 数组
-    NSMutableArray<UIImage *> *resultImages = [NSMutableArray arrayWithObject:faceImage];
-    if (leftEyeImage) {
-        [resultImages addObject:leftEyeImage];
-    }
-    if (rightEyeImage) {
-        [resultImages addObject:rightEyeImage];
+    
+    NSError *error = nil;
+    // 创建一个 1x12 的 2D MultiArray
+    MLMultiArray *multiArray = [[MLMultiArray alloc] initWithShape:@[@1, @12]
+                                                         dataType:MLMultiArrayDataTypeFloat32
+                                                            error:&error];
+
+    if (error) {
+        NSLog(@"创建 MLMultiArray 时出错: %@", error.localizedDescription);
+        return nil;
     }
 
-    return resultImages;
+    // 通过二维索引 (0, i) 来设置值，需要用 NSArray 包装索引
+    for (NSInteger i = 0; i < 12; i++) {
+        NSArray<NSNumber *> *index = @[@0, @(i)];
+        multiArray[index] = @(rects[i]);
+    }
+
+    
+    NSDictionary *result = @{
+        @"face": faceImage,
+        @"left": leftEyeImage,
+        @"right": rightEyeImage,
+        @"rect": multiArray
+    };
+    
+    return result;
 }
 
 // 从 pointsInImage 中计算 cv::Rect

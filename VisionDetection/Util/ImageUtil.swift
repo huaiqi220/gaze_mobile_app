@@ -268,4 +268,7 @@ func saveImage(_ image: UIImage) {
     }
 }
 
-
+func mirrorImage(_ image: UIImage) -> UIImage? {
+    guard let cgImage = image.cgImage else { return nil }
+    return UIImage(cgImage: cgImage, scale: image.scale, orientation: .upMirrored)
+}

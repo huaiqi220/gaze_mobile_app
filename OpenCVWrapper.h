@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ImageProcessor : NSObject
 
-+ (NSArray<UIImage *> *)preprocess:(UIImage *)image
++ (NSDictionary *)preprocess:(UIImage *)image
              withFaceObservation:(VNFaceObservation *)faceObservation
                        withSize:(CGSize)newSize
                    interpolation:(int)interpolation;
