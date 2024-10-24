@@ -60,6 +60,21 @@ playground.xcworkspace
 */.vscode
 */.vscode/*
 
-*/debug
-*/debug/*
-debug/
+# */debug
+# */debug/*
+# debug/
+
+
+*.pt
+
+*.dat
+
+images/*
+*/images
+*/images/*
+*.jpg
+
+
+__pycache__
+*/__pycache__
+__pycache__/*

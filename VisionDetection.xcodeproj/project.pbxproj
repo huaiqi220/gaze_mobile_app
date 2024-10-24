@@ -25,6 +25,7 @@
 		9477DB6D2CC67A0400C40251 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB6C2CC67A0400C40251 /* Accelerate.framework */; };
 		9477DB6F2CC67A0C00C40251 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9477DB6E2CC67A0C00C40251 /* CoreFoundation.framework */; };
 		9477DB732CC67DDF00C40251 /* OpenCVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9477DB722CC67DDF00C40251 /* OpenCVWrapper.mm */; };
+		948AF6AA2CCA3E7600AB6FD5 /* aff_net_ma.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 948AF6A92CCA3E7600AB6FD5 /* aff_net_ma.mlpackage */; };
 		94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */; };
 		94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */; };
 		94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */; };
@@ -58,6 +59,7 @@
 		9477DB712CC67DDF00C40251 /* OpenCVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVWrapper.h; sourceTree = "<group>"; };
 		9477DB722CC67DDF00C40251 /* OpenCVWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCVWrapper.mm; sourceTree = "<group>"; };
 		9477DB742CC67E4400C40251 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		948AF6A92CCA3E7600AB6FD5 /* aff_net_ma.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = aff_net_ma.mlpackage; sourceTree = "<group>"; };
 		94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		94B279D12CBF973700D41BD0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 		94B279DD2CC0B3CD00D41BD0 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				948AF6A92CCA3E7600AB6FD5 /* aff_net_ma.mlpackage */,
 				9471BC8C2CC8D050008E7A05 /* aff_net.mlpackage */,
 			);
 			path = model;
@@ -260,6 +263,7 @@
 				94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */,
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
 				94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */,
+				948AF6AA2CCA3E7600AB6FD5 /* aff_net_ma.mlpackage in Sources */,
 				9471BC8D2CC8D050008E7A05 /* aff_net.mlpackage in Sources */,
 				9471BC912CC92F3F008E7A05 /* ModelPredictViewController.swift in Sources */,
 				94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */,

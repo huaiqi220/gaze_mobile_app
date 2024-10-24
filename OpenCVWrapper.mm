@@ -55,6 +55,15 @@
 
 @implementation OpenCVWrapper
 
++ (MLMultiArray *)createMat{
+    // 创建大小为 112x112，通道数为 3，类型为 CV_32FC3 的 Mat
+    cv::Mat mat(112, 112, CV_32FC3, cv::Scalar(0.5, 0.5, 0.5));
+    
+
+    return convertMatToMLMultiArray(mat);
+}
+
+
 + (NSString *)getOpenCVVersion {
     return [NSString stringWithFormat:@"OpenCV Version %s",  CV_VERSION];
 }
@@ -134,8 +143,9 @@
 
     // 获取眼睛的地标并裁剪眼睛区域
     VNFaceLandmarks2D *landmarks = faceObservation.landmarks;
-    UIImage *leftEyeImage = nil;
-    UIImage *rightEyeImage = nil;
+    MLMultiArray *leftMultiArray = nil;
+    MLMultiArray *rightMultiArray = nil;
+    MLMultiArray *faceMultiArray = nil;
     cv::Mat resizedFace, resizedLeftEye, resizedRightEye;
     
     float rects[12] = {0};
@@ -161,7 +171,8 @@
             cv::resize(leftEyeCrop, resizedLeftEye, cv::Size(112, 112), 0, 0, interpolation);
             resizedLeftEye.convertTo(resizedLeftEye, CV_32F, 1.0 / 255);
 //            leftEyeImage = MatToUIImage(leftEyeCrop);
-            leftEyeImage = MatToUIImage(resizedLeftEye);
+//            leftEyeImage = MatToUIImage(resizedLeftEye);
+            leftMultiArray = convertMatToMLMultiArray(resizedLeftEye);
             
             // 存储左眼矩形信息
             rects[4] = leftEyeRect.x;
@@ -186,9 +197,10 @@
             cv::resize(rightEyeCrop, resizedRightEye, cv::Size(112, 112), 0, 0, interpolation);
 //            rightEyeImage = MatToUIImage(rightEyeCrop);
             resizedRightEye.convertTo(resizedRightEye, CV_32F, 1.0/255);
+            rightMultiArray = convertMatToMLMultiArray(resizedRightEye);
             // HWC转CHW
-            resizedRightEye = hwc_to_chw(resizedRightEye);
-            rightEyeImage = MatToUIImage(resizedRightEye);
+//            resizedRightEye = hwc_to_chw(resizedRightEye);
+//            rightEyeImage = MatToUIImage(resizedRightEye);
             
             // 存储右眼矩形信息
             rects[8] = rightEyeRect.x;
@@ -202,13 +214,13 @@
     cv::resize(faceCrop, resizedFace, cv::Size(224, 224), 0, 0, interpolation);
 //    UIImage *faceImage = MatToUIImage(faceCrop);
     resizedFace.convertTo(resizedFace, CV_32F, 1.0/255);
-    std::cout << "Original type: " << mat.type() << std::endl;
-    std::cout << "Converted type: " << resizedFace.type() << std::endl;
-    std::cout << "Pixel value (0,0): " << resizedFace.at<float>(0, 0) << std::endl;
-
+//    std::cout << "Original type: " << mat.type() << std::endl;
+//    std::cout << "Converted type: " << resizedFace.type() << std::endl;
+//    std::cout << "Pixel value (0,0): " << resizedFace.at<float>(0, 0) << std::endl;
+    faceMultiArray = convertMatToMLMultiArray(resizedFace);
     
     
-    UIImage *faceImage = MatToUIImage(resizedFace);
+//    UIImage *faceImage = MatToUIImage(resizedFace);
     
     // 存储面部矩形信息
     rects[0] = faceRect.x;
@@ -218,8 +230,8 @@
 
     
     NSError *error = nil;
-    // 创建一个 1x12 的 2D MultiArray
-    MLMultiArray *multiArray = [[MLMultiArray alloc] initWithShape:@[@1, @12]
+    // 创建一个长度为 12 的 1D MultiArray
+    MLMultiArray *multiArray = [[MLMultiArray alloc] initWithShape:@[@12]
                                                          dataType:MLMultiArrayDataTypeFloat32
                                                             error:&error];
 
@@ -228,17 +240,16 @@
         return nil;
     }
 
-    // 通过二维索引 (0, i) 来设置值，需要用 NSArray 包装索引
+    // 设置一维数组的值
     for (NSInteger i = 0; i < 12; i++) {
-        NSArray<NSNumber *> *index = @[@0, @(i)];
-        multiArray[index] = @(rects[i]);
+        multiArray[i] = @(rects[i]);
     }
 
     
     NSDictionary *result = @{
-        @"face": faceImage,
-        @"left": leftEyeImage,
-        @"right": rightEyeImage,
+        @"face": faceMultiArray,
+        @"left": leftMultiArray,
+        @"right": rightMultiArray,
         @"rect": multiArray
     };
     
@@ -273,24 +284,91 @@
 
 // HWC -> CHW 转换函数 (Objective-C 版本)
 // 专门处理CV_32FC3
-cv::Mat hwc_to_chw(cv::Mat img) {
-    // 确保输入是三通道图像
-    CV_Assert(img.channels() == 3);
+//cv::Mat hwc_to_chw(cv::Mat img) {
+//    // 确保输入是三通道图像
+//    CV_Assert(img.channels() == 3);
+//
+//    int height = img.rows;
+//    int width = img.cols;
+//
+//    // 拆分通道 B, G, R
+//    std::vector<cv::Mat> channels(3);
+//    cv::split(img, channels);
+//
+//    // 分配 CHW 格式的内存
+//    cv::Mat chw(3, height * width, CV_32FC3);
+//
+//    // 拷贝每个通道的数据到 CHW 格式的矩阵
+//    memcpy(chw.ptr(0), channels[0].data, height * width); // B
+//    memcpy(chw.ptr(1), channels[1].data, height * width); // G
+//    memcpy(chw.ptr(2), channels[2].data, height * width); // R
+//
+//    return chw;
+//}
 
-    int height = img.rows;
-    int width = img.cols;
 
-    // 拆分通道 B, G, R
-    std::vector<cv::Mat> channels(3);
-    cv::split(img, channels);
 
-    // 分配 CHW 格式的内存
-    cv::Mat chw(3, height * width, CV_32FC3);
+//MLMultiArray *convertMatToMLMultiArray(cv::Mat &mat) {
+//    NSError *error = nil;
+//    
+//    // 确定MLMultiArray的形状（以便与cv::Mat兼容）
+//    NSArray<NSNumber *> *shape = @[@(mat.rows), @(mat.cols), @(mat.channels())];
+//    
+//    // 创建适当形状的MLMultiArray，数据类型与Mat保持一致
+//    MLMultiArray *multiArray = [[MLMultiArray alloc] initWithShape:shape dataType:MLMultiArrayDataTypeFloat32 error:&error];
+//    
+//    if (error) {
+//        NSLog(@"Error creating MLMultiArray: %@", error.localizedDescription);
+//        return nil;
+//    }
+//    
+//    // 使用memcpy将cv::Mat的数据复制到MLMultiArray
+//    float *matData = reinterpret_cast<float *>(mat.data);
+//    float *multiArrayData = (float *)multiArray.dataPointer;
+//    size_t dataSize = mat.total() * mat.elemSize();
+//    memcpy(multiArrayData, matData, dataSize);
+//    
+//    return multiArray;
+//}
 
-    // 拷贝每个通道的数据到 CHW 格式的矩阵
-    memcpy(chw.ptr(0), channels[0].data, height * width); // B
-    memcpy(chw.ptr(1), channels[1].data, height * width); // G
-    memcpy(chw.ptr(2), channels[2].data, height * width); // R
+MLMultiArray *convertMatToMLMultiArray(cv::Mat &mat) {
+    NSError *error = nil;
 
-    return chw;
+    // 检查数据类型是否为 CV_32F（float）
+    if (mat.type() != CV_32FC3) {
+        NSLog(@"不支持的 Mat 类型。仅支持 CV_32F（float）类型。");
+        return nil;
+    }
+    
+    // 确保 Mat 在内存中是连续的
+    if (!mat.isContinuous()) {
+        NSLog(@"Mat 在内存中不是连续的。请确保矩阵是连续的。");
+        return nil;
+    }
+
+    // 确定 MLMultiArray 的形状（与 cv::Mat 兼容）
+    NSArray<NSNumber *> *shape = @[@(mat.rows), @(mat.cols), @(mat.channels())];
+
+    // 创建适当形状和数据类型的 MLMultiArray
+    MLMultiArray *multiArray = [[MLMultiArray alloc] initWithShape:shape
+                                                          dataType:MLMultiArrayDataTypeFloat32
+                                                             error:&error];
+    
+    if (error) {
+        NSLog(@"创建 MLMultiArray 时出错: %@", error.localizedDescription);
+        return nil;
+    }
+
+    // 使用 memcpy 将 cv::Mat 的数据复制到 MLMultiArray
+    float *matData = reinterpret_cast<float *>(mat.data);
+    float *multiArrayData = (float *)multiArray.dataPointer;
+    
+    // 数据大小计算：mat.total() 返回元素数量，mat.channels() 需要考虑到以得到正确的数据大小
+    size_t elementCount = mat.total() * mat.channels();
+    size_t dataSize = elementCount * sizeof(float);
+    
+    memcpy(multiArrayData, matData, dataSize);
+
+    return multiArray;
 }
+

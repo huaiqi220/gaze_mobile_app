@@ -48,7 +48,7 @@ class testViewController: UIViewController{
                     image = UIImage(cgImage: cgImage,scale: image.scale, orientation: .upMirrored)
                     guard let quartzImage = image.cgImage else {return}
                     index = index + 1
-                    print("正在处理图片: \(imageURL.lastPathComponent)")
+                    
 
                     detectFaceLandmarks(in: image) { faceObservation in
                         if let faceObservation = faceObservation{
@@ -58,21 +58,29 @@ class testViewController: UIViewController{
                             
                             let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation))
                             
-                            guard let faceimg = result["face"] as? UIImage,
-                                  let limg = result["left"] as? UIImage,
-                                  let rimg = result["right"] as? UIImage,
+                            guard let facema = result["face"] as? MLMultiArray,
+                                  let lma = result["left"] as? MLMultiArray,
+                                  let rma = result["right"] as? MLMultiArray,
                                   let may = result["rect"] as? MLMultiArray else{
                                 print("返回来的图像有空")
                                 return
                             }
+//                            printMultiArray(lma)
+//                            let test = OpenCVWrapper.createMat()
+//                            printMultiArray(test)
+//                            printMultiArray(may)
+
                             
-                            saveImageToPhotoLibrary(image: faceimg)
-                            saveImageToPhotoLibrary(image: limg)
-                            saveImageToPhotoLibrary(image: rimg)
-                            saveImageToPhotoLibrary(image: image)
+//                            saveImageToPhotoLibrary(image: faceimg)
+//                            saveImageToPhotoLibrary(image: limg)
+//                            saveImageToPhotoLibrary(image: rimg)
+//                            saveImageToPhotoLibrary(image: image)
                             
-                            let resultDictionary = predictUsingMLPackage(image1: faceimg, image2: limg, image3: rimg, multiArray: may)
+                            let resultDictionary = predictUsingMLPackage(image1: facema, image2: lma, image3: rma, multiArray: may)
+                            print("----")
+                            print("正在处理图片: \(imageURL.lastPathComponent)")
                             print(resultDictionary)
+                            print("----")
                             
                             
                             
@@ -97,4 +105,14 @@ class testViewController: UIViewController{
         
     }
 
+}
+
+
+func printMultiArray(_ multiArray: MLMultiArray) {
+    let count = multiArray.count
+    var elements: [Float] = []
+    for i in 0..<count {
+        elements.append(multiArray[i].floatValue)
+    }
+    print(elements)
 }
