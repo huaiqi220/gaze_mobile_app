@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <Vision/Vision.h>
+#import <opencv2/opencv.hpp>
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,5 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
                    interpolation:(int)interpolation;
 
 @end
+
+cv::Mat hwc_to_chw(cv::Mat img);
 
 NS_ASSUME_NONNULL_END

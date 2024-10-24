@@ -88,6 +88,7 @@
 		02611D871EEA5317009714B8 = {
 			isa = PBXGroup;
 			children = (
+				948AF6A82CCA23F000AB6FD5 /* debug */,
 				9477DB742CC67E4400C40251 /* PrefixHeader.pch */,
 				9477DB712CC67DDF00C40251 /* OpenCVWrapper.h */,
 				9477DB722CC67DDF00C40251 /* OpenCVWrapper.mm */,
@@ -135,6 +136,13 @@
 				9477DB662CC679EA00C40251 /* AssetsLibrary.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		948AF6A82CCA23F000AB6FD5 /* debug */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = debug;
 			sourceTree = "<group>";
 		};
 		94B279DD2CC0B3CD00D41BD0 /* model */ = {

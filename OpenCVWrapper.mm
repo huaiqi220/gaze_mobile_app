@@ -10,6 +10,7 @@
 #import <opencv2/imgcodecs/ios.h>
 #import <UIKit/UIKit.h>
 #import <Vision/Vision.h>
+#import <iostream>
 #import "OpenCVWrapper.h"
 
 /*
@@ -185,6 +186,8 @@
             cv::resize(rightEyeCrop, resizedRightEye, cv::Size(112, 112), 0, 0, interpolation);
 //            rightEyeImage = MatToUIImage(rightEyeCrop);
             resizedRightEye.convertTo(resizedRightEye, CV_32F, 1.0/255);
+            // HWC转CHW
+            resizedRightEye = hwc_to_chw(resizedRightEye);
             rightEyeImage = MatToUIImage(resizedRightEye);
             
             // 存储右眼矩形信息
@@ -199,6 +202,12 @@
     cv::resize(faceCrop, resizedFace, cv::Size(224, 224), 0, 0, interpolation);
 //    UIImage *faceImage = MatToUIImage(faceCrop);
     resizedFace.convertTo(resizedFace, CV_32F, 1.0/255);
+    std::cout << "Original type: " << mat.type() << std::endl;
+    std::cout << "Converted type: " << resizedFace.type() << std::endl;
+    std::cout << "Pixel value (0,0): " << resizedFace.at<float>(0, 0) << std::endl;
+
+    
+    
     UIImage *faceImage = MatToUIImage(resizedFace);
     
     // 存储面部矩形信息
@@ -261,3 +270,27 @@
 }
 
 @end
+
+// HWC -> CHW 转换函数 (Objective-C 版本)
+// 专门处理CV_32FC3
+cv::Mat hwc_to_chw(cv::Mat img) {
+    // 确保输入是三通道图像
+    CV_Assert(img.channels() == 3);
+
+    int height = img.rows;
+    int width = img.cols;
+
+    // 拆分通道 B, G, R
+    std::vector<cv::Mat> channels(3);
+    cv::split(img, channels);
+
+    // 分配 CHW 格式的内存
+    cv::Mat chw(3, height * width, CV_32FC3);
+
+    // 拷贝每个通道的数据到 CHW 格式的矩阵
+    memcpy(chw.ptr(0), channels[0].data, height * width); // B
+    memcpy(chw.ptr(1), channels[1].data, height * width); // G
+    memcpy(chw.ptr(2), channels[2].data, height * width); // R
+
+    return chw;
+}

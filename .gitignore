@@ -59,3 +59,7 @@ playground.xcworkspace
 .vscode
 */.vscode
 */.vscode/*
+
+*/debug
+*/debug/*
+debug/
