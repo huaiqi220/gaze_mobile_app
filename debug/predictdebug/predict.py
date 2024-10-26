@@ -6,10 +6,24 @@ import os
 import cv2
 import numpy as np
 
+import coremltools as ct
+import numpy as np
+
+
+
+
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
 image_path_now = './images'
+
+
+ml_model_path = "../../VisionDetection/model/aff_net_ma.mlpackage"
+ml_model = ct.models.MLModel(ml_model_path)
+
+# 2. 打印模型的输入和输出信息
+print("Model inputs:", ml_model.input_description)
+print("Model outputs:", ml_model.output_description)
 
 for image in os.listdir(image_path_now):
     if image == ".DS_Store":
@@ -31,10 +45,16 @@ for image in os.listdir(image_path_now):
     rect = np.array(rect).astype("float")
     rect = torch.from_numpy(rect).type(torch.FloatTensor)
 
+    mlfeature = {"faceImg":fimg,"leftEyeImg":limg,"rightEyeImg":rimg,"faceGridImg":rect}
+
 
     fimg = torch.from_numpy(fimg).type(torch.FloatTensor)
     limg = torch.from_numpy(limg).type(torch.FloatTensor)
     rimg = torch.from_numpy(rimg).type(torch.FloatTensor)
+
+    ml_res = ml_model.predict(mlfeature)
+    print("这是ml output")
+    print(ml_res)
 
 
 
