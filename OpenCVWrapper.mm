@@ -119,11 +119,10 @@
 
 + (NSDictionary *)preprocess:(UIImage *)image withFaceObservation:(VNFaceObservation *)faceObservation withSize:(CGSize)newSize interpolation:(int)interpolation {
     // 将 UIImage 转换为 cv::Mat
+    std::cout << "oc1" << std::endl;
     cv::Mat mat;
     [image convertToMat:&mat :false];
-    /**
-        解决了在通道数为3情况下不调用cvt导致通道依然是RGB的问题
-     */
+
     if (mat.channels() == 4) {
         cv::cvtColor(mat, mat, cv::COLOR_RGBA2BGR);
     } else if(mat.channels() == 3){
@@ -131,8 +130,8 @@
     }
 
     CGSize imageSize = image.size;
-
-    // 从 VNFaceObservation 中获取边界框
+    // 这里获得面部的bbox
+    std::cout << "oc2" << std::endl;
     CGRect boundingBox = faceObservation.boundingBox;
 
     // 将边界框坐标转换为图像坐标系统
@@ -140,10 +139,21 @@
     CGFloat y = boundingBox.origin.y * imageSize.height;
     CGFloat width = boundingBox.size.width * imageSize.width;
     CGFloat height = boundingBox.size.height * imageSize.height;
-
+    std::cout << "oc3" << std::endl;
     // 裁剪面部区域
-    cv::Rect faceRect(static_cast<int>(x), static_cast<int>(imageSize.height - (y + height)), static_cast<int>(width), static_cast<int>(height));
+//    cv::Rect faceRect(static_cast<int>(x), static_cast<int>(imageSize.height - (y + height)), static_cast<int>(width), static_cast<int>(height));
+    
+    // 限制 faceRect 的范围在图像边界内
+    // gpt写的，还没校对
+    int x_start = std::max(0, std::min(static_cast<int>(x), mat.cols - 1));
+    int y_start = std::max(0, std::min(static_cast<int>(imageSize.height - (y + height)), mat.rows - 1));
+    int rect_width = std::max(1, std::min(static_cast<int>(width), mat.cols - x_start));
+    int rect_height = std::max(1, std::min(static_cast<int>(height), mat.rows - y_start));
+
+    // 创建裁剪区域
+    cv::Rect faceRect(x_start, y_start, rect_width, rect_height);
     cv::Mat faceCrop = mat(faceRect);
+    std::cout << "oc4" << std::endl;
 
     // 获取眼睛的地标并裁剪眼睛区域
     VNFaceLandmarks2D *landmarks = faceObservation.landmarks;
@@ -166,9 +176,10 @@
                 static_cast<int>(leftEyeRect.height)
             );
             
-            // 为左眼矩形上下各增加20像素
+            // 为左眼矩形上下各增加20像素，确保不超过边界
             leftEyeRect.y = std::max(leftEyeRect.y - 20, 0); // 确保y坐标不小于0
-            leftEyeRect.height = leftEyeRect.height + 40;     // 增加40像素高度（上下各20）
+            leftEyeRect.height = std::min(leftEyeRect.height + 40, static_cast<int>(imageSize.height - leftEyeRect.y)); // 确保高度不超过图像边界
+            leftEyeRect.width = std::min(leftEyeRect.width, static_cast<int>(imageSize.width - leftEyeRect.x)); // 确保宽度
 
             // 裁剪左眼图像
             cv::Mat leftEyeCrop = mat(leftEyeRect);
@@ -192,9 +203,11 @@
                 static_cast<int>(rightEyeRect.height)
             );
             
-            // 为右眼矩形上下各增加20像素
+            // 为右眼矩形上下各增加20像素，确保不超过边界
             rightEyeRect.y = std::max(rightEyeRect.y - 20, 0); // 确保y坐标不小于0
-            rightEyeRect.height = rightEyeRect.height + 40;     // 增加40像素高度（上下各20）
+            rightEyeRect.height = std::min(rightEyeRect.height + 40, static_cast<int>(imageSize.height - rightEyeRect.y)); // 确保高度不超过图像边界
+            rightEyeRect.width = std::min(rightEyeRect.width, static_cast<int>(imageSize.width - rightEyeRect.x)); // 确保宽度不超过图像边界
+
 
             // 裁剪右眼图像
             cv::Mat rightEyeCrop = mat(rightEyeRect);

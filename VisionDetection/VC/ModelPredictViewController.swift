@@ -203,6 +203,7 @@ class ModelPredictViewController: UIViewController {
                             print("当前毫秒时间: \(timestamp)")
                             DispatchQueue.main.async {
                                 // 更新主线程上的 UI
+                                print("5")
                                 self.coordinateLabel.text = "x: \(x), y: \(y)"
                             }
                         }
@@ -235,6 +236,8 @@ extension ModelPredictViewController: AVCaptureVideoDataOutputSampleBufferDelega
         let context = CIContext()
         if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
             let capturedImage = UIImage(cgImage: cgImage)
+            
+            
             // 在后台队列中处理帧
             DispatchQueue.global(qos: .userInitiated).async {
                 self.processCapturedFrame(capturedImage)
