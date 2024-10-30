@@ -17,7 +17,7 @@ class ModelPredictViewController: UIViewController {
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     var videoOutput: AVCaptureVideoDataOutput!
     var caliFeatureID: String?
-    var model: aff_net?
+    var model: aff_net_ma?
     let sequenceHandler = VNSequenceRequestHandler()
     var coordinateLabel: UILabel!
     
@@ -73,7 +73,7 @@ class ModelPredictViewController: UIViewController {
         
     
         do{
-            model = try aff_net(configuration: .init())
+            model = try aff_net_ma(configuration: .init())
         }catch{
             print("模型加载抛出异常")
             return
@@ -154,22 +154,16 @@ class ModelPredictViewController: UIViewController {
                 let newSize = CGSizeMake(112, 112); // 你希望调整的目标大小
                 let interpolation = 1; // 插值方法
                 let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation))
-                guard let faceimg = result["face"] as? UIImage,
-                      let limg = result["left"] as? UIImage,
-                      let rimg = result["right"] as? UIImage,
+                guard let facema = result["face"] as? MLMultiArray,
+                      let lma = result["left"] as? MLMultiArray,
+                      let rma = result["right"] as? MLMultiArray,
                       let may = result["rect"] as? MLMultiArray else{
                     print("返回来的图像有空")
                     return
                 }
                 
-                guard let fpb = faceimg.toCVPixelBuffer(),
-                      let lpb = limg.toCVPixelBuffer(),
-                      let rpb = rimg.toCVPixelBuffer() else {
-                    print("没有成功把 UIImage 转成 PixelBuffer")
-                    return
-                }
                 
-                let input = aff_netInput(leftEyeImg:lpb,rightEyeImg: rpb,faceImg: fpb,faceGridImg: may)
+                let input = aff_net_maInput(leftEyeImg:lma,rightEyeImg: rma,faceImg: facema,faceGridImg: may)
                 
                 do{
                     let res = try self.model?.prediction(input: input).linear_35

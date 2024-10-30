@@ -1,9 +1,11 @@
 import numpy as np
 import cv2
 # import torch
+import os
 
-
+index = 0
 def func(face_path,leye_path, reye_path,save_path):
+    index = index + 1
     rimg = cv2.imread(reye_path)
     # rimg = cv2.resize(rimg,  (224, 224))/255.0
     rimg = cv2.resize(rimg,  (112, 112))
@@ -21,14 +23,16 @@ def func(face_path,leye_path, reye_path,save_path):
 
 
     print(rimg.shape)
-    cv2.imwrite("face.jpg",fimg)
-    cv2.imwrite("leye.jpg",limg)
-    cv2.imwrite("reye.jpg",rimg)
+    cv2.imwrite("face" + "_" + index + ".jpg",fimg)
+    cv2.imwrite("leye" + "_" + index + ".jpg",limg)
+    cv2.imwrite("reye" + "_" + index + ".jpg",rimg)
 
 
-if __name__ == "__main__":
-    face_path = "images/IMG_1118.JPG"
-    leye_path = "images/IMG_1119.JPG"
-    reye_path = "images/IMG_1120.JPG"
+# if __name__ == "__main__":
+#     folder = "/Users/zhuz1/Desktop/数据预处理检查"
+#     for image in os.listdir(folder):
+#         cur = os.path.join(folder,image)
 
-    func(face_path=face_path,leye_path=leye_path,reye_path=reye_path,save_path="")
+
+
+#     func(face_path=face_path,leye_path=leye_path,reye_path=reye_path,save_path="")

@@ -121,9 +121,13 @@
     // 将 UIImage 转换为 cv::Mat
     cv::Mat mat;
     [image convertToMat:&mat :false];
-    
+    /**
+        解决了在通道数为3情况下不调用cvt导致通道依然是RGB的问题
+     */
     if (mat.channels() == 4) {
-        cv::cvtColor(mat, mat, cv::COLOR_RGBA2RGB);
+        cv::cvtColor(mat, mat, cv::COLOR_RGBA2BGR);
+    } else if(mat.channels() == 3){
+        cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
     }
 
     CGSize imageSize = image.size;
@@ -282,93 +286,65 @@
 
 @end
 
-// HWC -> CHW 转换函数 (Objective-C 版本)
-// 专门处理CV_32FC3
-//cv::Mat hwc_to_chw(cv::Mat img) {
-//    // 确保输入是三通道图像
-//    CV_Assert(img.channels() == 3);
-//
-//    int height = img.rows;
-//    int width = img.cols;
-//
-//    // 拆分通道 B, G, R
-//    std::vector<cv::Mat> channels(3);
-//    cv::split(img, channels);
-//
-//    // 分配 CHW 格式的内存
-//    cv::Mat chw(3, height * width, CV_32FC3);
-//
-//    // 拷贝每个通道的数据到 CHW 格式的矩阵
-//    memcpy(chw.ptr(0), channels[0].data, height * width); // B
-//    memcpy(chw.ptr(1), channels[1].data, height * width); // G
-//    memcpy(chw.ptr(2), channels[2].data, height * width); // R
-//
-//    return chw;
-//}
 
-
-
-//MLMultiArray *convertMatToMLMultiArray(cv::Mat &mat) {
-//    NSError *error = nil;
-//    
-//    // 确定MLMultiArray的形状（以便与cv::Mat兼容）
-//    NSArray<NSNumber *> *shape = @[@(mat.rows), @(mat.cols), @(mat.channels())];
-//    
-//    // 创建适当形状的MLMultiArray，数据类型与Mat保持一致
-//    MLMultiArray *multiArray = [[MLMultiArray alloc] initWithShape:shape dataType:MLMultiArrayDataTypeFloat32 error:&error];
-//    
-//    if (error) {
-//        NSLog(@"Error creating MLMultiArray: %@", error.localizedDescription);
-//        return nil;
-//    }
-//    
-//    // 使用memcpy将cv::Mat的数据复制到MLMultiArray
-//    float *matData = reinterpret_cast<float *>(mat.data);
-//    float *multiArrayData = (float *)multiArray.dataPointer;
-//    size_t dataSize = mat.total() * mat.elemSize();
-//    memcpy(multiArrayData, matData, dataSize);
-//    
-//    return multiArray;
-//}
 
 MLMultiArray *convertMatToMLMultiArray(cv::Mat &mat) {
     NSError *error = nil;
 
-    // 检查数据类型是否为 CV_32F（float）
+    // 检查数据类型是否为 CV_32FC3（float32，3通道）
     if (mat.type() != CV_32FC3) {
-        NSLog(@"不支持的 Mat 类型。仅支持 CV_32F（float）类型。");
+        NSLog(@"不支持的 Mat 类型。仅支持 CV_32FC3（float32，3通道）类型。");
         return nil;
     }
-    
+
     // 确保 Mat 在内存中是连续的
     if (!mat.isContinuous()) {
-        NSLog(@"Mat 在内存中不是连续的。请确保矩阵是连续的。");
-        return nil;
+        mat = mat.clone();
     }
 
-    // 确定 MLMultiArray 的形状（与 cv::Mat 兼容）
+    // 定义 MLMultiArray 的形状，假设我们需要 [rows, cols, channels]
     NSArray<NSNumber *> *shape = @[@(mat.rows), @(mat.cols), @(mat.channels())];
 
-    // 创建适当形状和数据类型的 MLMultiArray
+    // 创建 MLMultiArray
     MLMultiArray *multiArray = [[MLMultiArray alloc] initWithShape:shape
                                                           dataType:MLMultiArrayDataTypeFloat32
                                                              error:&error];
-    
+
     if (error) {
         NSLog(@"创建 MLMultiArray 时出错: %@", error.localizedDescription);
         return nil;
     }
 
-    // 使用 memcpy 将 cv::Mat 的数据复制到 MLMultiArray
+    // 获取指向数据的指针
     float *matData = reinterpret_cast<float *>(mat.data);
     float *multiArrayData = (float *)multiArray.dataPointer;
-    
-    // 数据大小计算：mat.total() 返回元素数量，mat.channels() 需要考虑到以得到正确的数据大小
-    size_t elementCount = mat.total() * mat.channels();
-    size_t dataSize = elementCount * sizeof(float);
-    
-    memcpy(multiArrayData, matData, dataSize);
+
+    // 获取 MLMultiArray 的 strides（步长）
+    NSInteger stride0 = multiArray.strides[0].integerValue; // rows
+    NSInteger stride1 = multiArray.strides[1].integerValue; // cols
+    NSInteger stride2 = multiArray.strides[2].integerValue; // channels
+
+    // 确保 strides 是按 [rows, cols, channels] 的顺序
+    if (multiArray.strides.count != 3 ||
+        multiArray.shape.count != 3 ||
+        stride0 <= 0 || stride1 <= 0 || stride2 <= 0) {
+        NSLog(@"MLMultiArray 的 strides 或 shape 不正确。");
+        return nil;
+    }
+
+    // 遍历所有元素，按正确的顺序复制数据
+    for (int i = 0; i < mat.rows; ++i) {
+        for (int j = 0; j < mat.cols; ++j) {
+            cv::Vec3f pixel = mat.at<cv::Vec3f>(i, j);
+            for (int c = 0; c < mat.channels(); ++c) {
+                // 计算 MLMultiArray 中的索引
+                NSInteger index = i * stride0 + j * stride1 + c * stride2;
+                multiArrayData[index] = pixel[c];
+            }
+        }
+    }
 
     return multiArray;
 }
+
 

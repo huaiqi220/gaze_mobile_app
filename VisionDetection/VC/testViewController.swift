@@ -19,8 +19,8 @@ import ImageIO
 
 
 class testViewController: UIViewController{
-    private let face_image_size = CGSize(width: 112, height: 112)
-    private let eye_image_size = CGSize(width: 224, height: 224)
+    private let face_image_size = CGSize(width: 224, height: 224)
+    private let eye_image_size = CGSize(width: 112, height: 112)
     private var face_renderer = UIGraphicsImageRenderer()
     private var eye_renderer = UIGraphicsImageRenderer()
     private var imageView: UIImageView!

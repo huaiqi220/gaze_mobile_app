@@ -43,11 +43,11 @@ for image in os.listdir(image_path_now):
             left_eye[0],left_eye[1],left_eye[2],left_eye[3],
             right_eye[0],right_eye[1],right_eye[2],right_eye[3]]
     rect = np.array(rect).astype("float")
-    rect = torch.from_numpy(rect).type(torch.FloatTensor)
+    
 
     mlfeature = {"faceImg":fimg,"leftEyeImg":limg,"rightEyeImg":rimg,"faceGridImg":rect}
 
-
+    rect = torch.from_numpy(rect).type(torch.FloatTensor)
     fimg = torch.from_numpy(fimg).type(torch.FloatTensor)
     limg = torch.from_numpy(limg).type(torch.FloatTensor)
     rimg = torch.from_numpy(rimg).type(torch.FloatTensor)
