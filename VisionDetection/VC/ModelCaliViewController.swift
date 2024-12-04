@@ -106,41 +106,8 @@ class ModelCaliViewController: UIViewController, UIPickerViewDelegate, UIPickerV
             print("未选择文件夹")
             return
         }
+        print("你好，现在开始响应校准")
         
-        
-        
-//        print("已选择文件夹: \(selectedFolder)")
-//        
-//        // 获取选中目录的路径
-//        if let customDirectory = getCustomDirectory(caseID: selectedFolder) {
-//            // 遍历选中目录中的图片文件，执行人脸特征检测
-//            let imageFiles = getImageFiles(from: customDirectory)
-//            
-//            for imageURL in imageFiles {
-//                if let image = UIImage(contentsOfFile: imageURL.path) {
-//                    print("正在处理图片: \(imageURL.lastPathComponent)")
-//                    
-//                    detectFaceLandmarks(in: image) { faceObservation in
-//                        if let landmarks = faceObservation?.landmarks {
-//                            print("成功检测到人脸特征")
-//                            if let leftEye = landmarks.leftEye {
-//                                print("左眼特征点数量: \(leftEye.pointCount)")
-//                            }
-//                            if let rightEye = landmarks.rightEye {
-//                                print("右眼特征点数量: \(rightEye.pointCount)")
-//                            }
-//                            if let mouth = landmarks.outerLips {
-//                                print("嘴巴特征点数量: \(mouth.pointCount)")
-//                            }
-//                        } else {
-//                            print("未检测到人脸特征")
-//                        }
-//                    }
-//                } else {
-//                    print("无法加载图片: \(imageURL.lastPathComponent)")
-//                }
-//            }
-//        }
     }
     
     

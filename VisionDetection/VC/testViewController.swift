@@ -19,11 +19,14 @@ import ImageIO
 
 
 class testViewController: UIViewController{
-    private let face_image_size = CGSize(width: 224, height: 224)
-    private let eye_image_size = CGSize(width: 112, height: 112)
+    private let face_image_size = CGSize(width: 112, height: 112)
+    private let eye_image_size = CGSize(width: 224, height: 224)
     private var face_renderer = UIGraphicsImageRenderer()
     private var eye_renderer = UIGraphicsImageRenderer()
     private var imageView: UIImageView!
+    
+    private var batchCache: [[String: MLMultiArray]] = [] // 缓存每张图片的结果
+    private let batchSize = 9 // 批量大小
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +36,6 @@ class testViewController: UIViewController{
         // 展示debug图片
         imageView = UIImageView(frame: self.view.bounds) // 使其填满整个屏幕
         imageView.contentMode = .scaleAspectFit // 使图像保持比例
-        
         view.backgroundColor = .white
         
         // 获取选中目录的路径
@@ -58,35 +60,28 @@ class testViewController: UIViewController{
                             
                             let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation))
                             
-                            guard let facema = result["face"] as? MLMultiArray,
-                                  let lma = result["left"] as? MLMultiArray,
-                                  let rma = result["right"] as? MLMultiArray,
-                                  let may = result["rect"] as? MLMultiArray else{
+                            guard var facema = result["face"] as? MLMultiArray,
+                                  var lma = result["left"] as? MLMultiArray,
+                                  var rma = result["right"] as? MLMultiArray,
+                                  var may = result["rect"] as? MLMultiArray else{
                                 print("返回来的图像有空")
                                 return
                             }
-//                            printMultiArray(lma)
-//                            let test = OpenCVWrapper.createMat()
-//                            printMultiArray(test)
-//                            printMultiArray(may)
-
                             
-//                            saveImageToPhotoLibrary(image: faceimg)
-//                            saveImageToPhotoLibrary(image: limg)
-//                            saveImageToPhotoLibrary(image: rimg)
-//                            saveImageToPhotoLibrary(image: image)
+                            // 添加到缓存
+                            let resultDict = ["face": facema, "left": lma, "right": rma, "rect": may]
+                            self.batchCache.append(resultDict)
+                            // 批量处理
+                            if self.batchCache.count == self.batchSize {
+                                self.processBatch()
+                            }
                             
-                            let resultDictionary = predictUsingMLPackage(image1: facema, image2: lma, image3: rma, multiArray: may)
-                            print("----")
-                            print("正在处理图片: \(imageURL.lastPathComponent)")
-                            print(resultDictionary)
-                            print("----")
-                            
-                            
-                            
-                                
-                                       
-                                
+//                            let resultDictionary = getCaliDataFeature(image1: facema, image2: lma, image3: rma, multiArray: may)
+//                            print("----")
+//                            print("正在处理图片: \(imageURL.lastPathComponent)")
+//                            print(resultDictionary)
+//                            print("----")
+  
 
                         }else{
                             print("未检测到人脸特征")
@@ -103,6 +98,58 @@ class testViewController: UIViewController{
         }
         
         
+    }
+    
+    private func processBatch() {
+        print("正在处理批量图片，数量: \(batchCache.count)")
+        
+        // 提取 face、left、right 的 NHWC 堆叠
+        let faceArrays = batchCache.compactMap { $0["face"] }
+        let leftArrays = batchCache.compactMap { $0["left"] }
+        let rightArrays = batchCache.compactMap { $0["right"] }
+        let rects = batchCache.compactMap { $0["rect"] }
+        
+        guard let stackedFace = stackMultiArray(faceArrays),
+              let stackedLeft = stackMultiArray(leftArrays),
+              let stackedRight = stackMultiArray(rightArrays),
+              let stackedRects = stackMultiArray(rects) else {
+            print("批量堆叠失败")
+            return
+        }
+        
+        // 批量推理逻辑（可以根据需求修改这里的代码）
+        let resultDictionary = getCaliDataFeature(image1: stackedFace, image2: stackedLeft, image3: stackedRight, multiArray: stackedRects)
+        print("----")
+        print(resultDictionary?.count)
+        print("----")
+        
+        // 清空缓存
+        batchCache.removeAll()
+    }
+    
+    // 工具方法：将多个 MLMultiArray 堆叠为一个 NHWC 的 MLMultiArray
+    private func stackMultiArray(_ arrays: [MLMultiArray]) -> MLMultiArray? {
+        guard let first = arrays.first else { return nil }
+        
+        // 确定新维度大小
+        let shape = first.shape.map { $0.intValue }
+        let batchSize = arrays.count
+        let newShape = [batchSize] + shape // 添加批量维度
+        
+        // 创建新的 MLMultiArray
+        let stackedArray = try? MLMultiArray(shape: newShape as [NSNumber], dataType: first.dataType)
+        
+        guard let result = stackedArray else { return nil }
+        
+        // 填充堆叠后的数据
+        for (batchIndex, array) in arrays.enumerated() {
+            let offset = batchIndex * shape.reduce(1, *)
+            for i in 0..<array.count {
+                result[offset + i] = array[i]
+            }
+        }
+        
+        return result
     }
 
 }

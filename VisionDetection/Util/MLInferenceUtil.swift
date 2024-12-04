@@ -19,6 +19,7 @@
 
 import CoreML
 import UIKit
+import Foundation
 
 
 
@@ -50,6 +51,61 @@ func predictUsingMLPackage(image1: MLMultiArray, image2: MLMultiArray, image3: M
     
 
 }
+
+
+// 处理获得校准数据的feature
+func getCaliDataFeature(image1: MLMultiArray, image2: MLMultiArray, image3: MLMultiArray, multiArray: MLMultiArray) -> MLMultiArray? {
+
+    do{
+        // 初始化模型
+        let model = try cges_getfeature(configuration: .init())
+        print("1")
+        let input = cges_getfeatureInput(faceImg: image1,leftEyeImg:image2,rightEyeImg: image3,faceGridImg: multiArray)
+        print("2")
+        let res = try model.prediction(input: input)
+        // 获取返回的 1x2 的 MLMultiArray
+        print("3")
+        let resultArray = res.linear_8
+        print("4")
+        return resultArray
+        
+    }catch{
+        print("模型加载推理过程出错")
+        return nil
+    }
+    
+
+}
+
+
+func addBatchDimension(to array: MLMultiArray, batchSize: Int, shape: Int) -> MLMultiArray? {
+    // Ensure the original shape is [112, 112, 3]
+    guard array.shape.count == 3,
+          array.shape == [shape, shape, 3] as [NSNumber] else {
+        print("Input MLMultiArray does not have the expected shape of [112, 112, 3].")
+        return nil
+    }
+    
+    // Create a new MLMultiArray with shape [batchSize, 112, 112, 3]
+    let newShape = [batchSize, shape, shape, 3].map { NSNumber(value: $0) }
+    guard let newArray = try? MLMultiArray(shape: newShape, dataType: array.dataType) else {
+        print("Failed to create new MLMultiArray.")
+        return nil
+    }
+    
+    // Copy the data into the new array for each batch
+    let totalElements = array.count
+    for batch in 0..<batchSize {
+        for index in 0..<totalElements {
+            newArray[batch * totalElements + index] = array[index]
+        }
+    }
+    return newArray
+}
+
+
+
+
 
 
 

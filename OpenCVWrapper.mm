@@ -183,7 +183,7 @@
 
             // 裁剪左眼图像
             cv::Mat leftEyeCrop = mat(leftEyeRect);
-            cv::resize(leftEyeCrop, resizedLeftEye, cv::Size(112, 112), 0, 0, interpolation);
+            cv::resize(leftEyeCrop, resizedLeftEye, cv::Size(224, 224), 0, 0, interpolation);
             resizedLeftEye.convertTo(resizedLeftEye, CV_32F, 1.0 / 255);
 //            leftEyeImage = MatToUIImage(leftEyeCrop);
 //            leftEyeImage = MatToUIImage(resizedLeftEye);
@@ -211,7 +211,7 @@
 
             // 裁剪右眼图像
             cv::Mat rightEyeCrop = mat(rightEyeRect);
-            cv::resize(rightEyeCrop, resizedRightEye, cv::Size(112, 112), 0, 0, interpolation);
+            cv::resize(rightEyeCrop, resizedRightEye, cv::Size(224, 224), 0, 0, interpolation);
 //            rightEyeImage = MatToUIImage(rightEyeCrop);
             resizedRightEye.convertTo(resizedRightEye, CV_32F, 1.0/255);
             rightMultiArray = convertMatToMLMultiArray(resizedRightEye);
@@ -228,7 +228,7 @@
     }
 
     // 将面部裁剪转换为 UIImage
-    cv::resize(faceCrop, resizedFace, cv::Size(224, 224), 0, 0, interpolation);
+    cv::resize(faceCrop, resizedFace, cv::Size(112, 112), 0, 0, interpolation);
 //    UIImage *faceImage = MatToUIImage(faceCrop);
     resizedFace.convertTo(resizedFace, CV_32F, 1.0/255);
 //    std::cout << "Original type: " << mat.type() << std::endl;

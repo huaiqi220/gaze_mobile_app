@@ -14,6 +14,9 @@
 		02611D9E1EEA5317009714B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02611D9C1EEA5317009714B8 /* LaunchScreen.storyboard */; };
 		02611DA61EEA5683009714B8 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02611DA51EEA5683009714B8 /* PreviewView.swift */; };
 		2849C929220ABCBE000977F1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2849C928220ABCBE000977F1 /* Extensions.swift */; };
+		94715B7F2D006953006D21C9 /* cges_getfeature.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 94715B7C2D006951006D21C9 /* cges_getfeature.mlpackage */; };
+		94715B802D006953006D21C9 /* cges_getgaze.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 94715B7D2D006952006D21C9 /* cges_getgaze.mlpackage */; };
+		94715B812D006953006D21C9 /* cges_inf.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 94715B7E2D006953006D21C9 /* cges_inf.mlpackage */; };
 		9471BC8D2CC8D050008E7A05 /* aff_net.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 9471BC8C2CC8D050008E7A05 /* aff_net.mlpackage */; };
 		9471BC8F2CC92D29008E7A05 /* dataUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471BC8E2CC92D29008E7A05 /* dataUtil.swift */; };
 		9471BC912CC92F3F008E7A05 /* ModelPredictViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471BC902CC92F3F008E7A05 /* ModelPredictViewController.swift */; };
@@ -46,6 +49,9 @@
 		02611D9F1EEA5317009714B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02611DA51EEA5683009714B8 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		2849C928220ABCBE000977F1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		94715B7C2D006951006D21C9 /* cges_getfeature.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_getfeature.mlpackage; sourceTree = "<group>"; };
+		94715B7D2D006952006D21C9 /* cges_getgaze.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_getgaze.mlpackage; sourceTree = "<group>"; };
+		94715B7E2D006953006D21C9 /* cges_inf.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_inf.mlpackage; sourceTree = "<group>"; };
 		9471BC8C2CC8D050008E7A05 /* aff_net.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = aff_net.mlpackage; sourceTree = "<group>"; };
 		9471BC8E2CC92D29008E7A05 /* dataUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dataUtil.swift; sourceTree = "<group>"; };
 		9471BC902CC92F3F008E7A05 /* ModelPredictViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPredictViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +161,9 @@
 		94B279DD2CC0B3CD00D41BD0 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				94715B7C2D006951006D21C9 /* cges_getfeature.mlpackage */,
+				94715B7D2D006952006D21C9 /* cges_getgaze.mlpackage */,
+				94715B7E2D006953006D21C9 /* cges_inf.mlpackage */,
 				948AF6A92CCA3E7600AB6FD5 /* aff_net_ma.mlpackage */,
 				9471BC8C2CC8D050008E7A05 /* aff_net.mlpackage */,
 			);
@@ -260,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */,
+				94715B7F2D006953006D21C9 /* cges_getfeature.mlpackage in Sources */,
 				94B279DB2CC0A75D00D41BD0 /* ImageUtil.swift in Sources */,
 				9471BC932CC932EF008E7A05 /* PredictHelperViewController.swift in Sources */,
 				9477DB732CC67DDF00C40251 /* OpenCVWrapper.mm in Sources */,
@@ -267,7 +277,9 @@
 				94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */,
 				94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */,
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
+				94715B802D006953006D21C9 /* cges_getgaze.mlpackage in Sources */,
 				94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */,
+				94715B812D006953006D21C9 /* cges_inf.mlpackage in Sources */,
 				94D7441F2CD22C9200C56FFA /* AppConfig.swift in Sources */,
 				948AF6AA2CCA3E7600AB6FD5 /* aff_net_ma.mlpackage in Sources */,
 				9471BC8D2CC8D050008E7A05 /* aff_net.mlpackage in Sources */,
@@ -420,8 +432,11 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = VisionDetection/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "CGES App";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.001ver;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhuz1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -445,8 +460,11 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = VisionDetection/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "CGES App";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.001ver;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhuz1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "VisionDetection-Bridging-Header.h";
