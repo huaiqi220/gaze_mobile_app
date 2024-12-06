@@ -74,12 +74,6 @@ class CameraViewController: UIViewController {
             print("相机不可用: \(error)")
         }
         
-//        // 添加拍摄按钮
-//        let captureButton = UIButton(type: .system)
-//        captureButton.setTitle("拍摄", for: .normal)
-//        captureButton.frame = CGRect(x: 100, y: view.frame.height - 100, width: 200, height: 50)
-//        captureButton.addTarget(self, action: #selector(capturePhoto), for: .touchUpInside)
-//        view.addSubview(captureButton)
         createButtons()
     }
     
@@ -99,7 +93,7 @@ class CameraViewController: UIViewController {
         ]
         
         // 标签数组，标识按钮的位置
-        let tags = ["left_top", "left_middle", "left_bottom", "right_top", "right_middle", "right_bottom", "center_top", "center_bottom", "center_center"]
+        let tags = ["left_top", "left_middle", "left_bottom", "right_top", "right_middle", "right_bottom", "center_top", "center_bottom", "center_middle"]
         
         for (index, position) in positions.enumerated() {
             let button = UIButton(type: .system)

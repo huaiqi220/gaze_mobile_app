@@ -26,7 +26,7 @@ class PredictHelperViewController: UIViewController {
         
         // 添加文本标签
         let helperLabel = UILabel()
-        helperLabel.text = "即将进入模型测试界面，请在下拉框中选择"
+        helperLabel.text = "即将进入模型微调界面，请在下拉框中选择"
         // 设置其他属性
         helperLabel.font = UIFont.systemFont(ofSize: 20)  // 设置字体大小
         helperLabel.textColor = .black  // 设置字体颜色

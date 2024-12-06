@@ -22,32 +22,43 @@ class ModelCaliViewController: UIViewController, UIPickerViewDelegate, UIPickerV
         
         view.backgroundColor = .white
         
+        // 添加描述标签
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = "请在下拉框中选择需要校准的样本数据对应的 caseID"
+        descriptionLabel.textAlignment = .center
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(descriptionLabel)
+        
+        // 设置描述标签约束
+        descriptionLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 150).isActive = true
+        descriptionLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        
+        
+        
         // 创建下拉框 (UIPickerView)
         folderPickerView = UIPickerView()
         folderPickerView.delegate = self
         folderPickerView.dataSource = self
         folderPickerView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(folderPickerView)
-        // 添加约束
+        
+        // 添加约束 - 将下拉框与标签靠近
+        folderPickerView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10).isActive = true
         folderPickerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        folderPickerView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
         
         // 获取images/cali中的文件夹
         loadFolderNames()
         
-        // 创建校准按钮
-        let calibrateButton = UIButton(type: .system)
-        calibrateButton.setTitle("开始计算校准向量", for: .normal)
-        calibrateButton.translatesAutoresizingMaskIntoConstraints = false
-        calibrateButton.addTarget(self, action: #selector(calibrateButtonTapped), for: .touchUpInside)
-        self.view.addSubview(calibrateButton)
+        // 创建校准页面跳转按钮
+        let nextPageButton = UIButton(type: .system)
+        nextPageButton.setTitle("下一步: 校准", for: .normal)
+        nextPageButton.translatesAutoresizingMaskIntoConstraints = false
+        nextPageButton.addTarget(self, action: #selector(nextPageButtonTapped), for: .touchUpInside)
+        self.view.addSubview(nextPageButton)
         
         // 设置按钮约束
-        calibrateButton.topAnchor.constraint(equalTo: folderPickerView.bottomAnchor, constant: 20).isActive = true
-        calibrateButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        
-        
-        
+        nextPageButton.topAnchor.constraint(equalTo: folderPickerView.bottomAnchor, constant: 20).isActive = true
+        nextPageButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
     }
     
@@ -100,14 +111,18 @@ class ModelCaliViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     }
     
     
-    /// 这个函数用来响应校准
-    @objc func calibrateButtonTapped() {
+    // 跳转到校准页面
+    @objc func nextPageButtonTapped() {
         guard let selectedFolder = selectedFolder else {
-            print("未选择文件夹")
+            let alert = UIAlertController(title: "提示", message: "请选择一个文件夹", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "确定", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
             return
         }
-        print("你好，现在开始响应校准")
         
+        let testVC = testViewController()
+        testVC.case_id = selectedFolder
+        navigationController?.pushViewController(testVC, animated: true)
     }
     
     

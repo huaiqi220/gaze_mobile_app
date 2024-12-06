@@ -104,6 +104,26 @@ func addBatchDimension(to array: MLMultiArray, batchSize: Int, shape: Int) -> ML
 }
 
 
+func create1DZeroArray(size: Int) -> MLMultiArray? {
+    // 期望模型输入是一维数组，大小为 size
+    let shape: [NSNumber] = [NSNumber(value: size)]
+    
+    // 尝试创建一维 MLMultiArray
+    do {
+        let multiArray = try MLMultiArray(shape: shape, dataType: .float32)
+        
+        // 初始化为全零
+        for i in 0..<multiArray.count {
+            multiArray[i] = 0
+        }
+        
+        return multiArray
+    } catch {
+        print("Error creating MLMultiArray: \(error)")
+        return nil
+    }
+}
+
 
 
 

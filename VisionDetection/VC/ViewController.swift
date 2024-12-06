@@ -29,23 +29,32 @@ class ViewController: UIViewController{
         showImages.addTarget(self, action: #selector(showImagesTapped), for: .touchUpInside)
         view.addSubview(showImages)
         
+        // 创建按钮2
+        let startBasedPredict = UIButton(type: .system)
+        startBasedPredict.setTitle("开始基准测试", for: .normal)
+        startBasedPredict.frame = CGRect(x: 100, y: 400, width: 200, height: 50)
+        startBasedPredict.addTarget(self, action: #selector(button2Tapped), for: .touchUpInside)
+        view.addSubview(startBasedPredict)
+        
+        
         let computeCaliParam = UIButton(type: .system)
         computeCaliParam.setTitle("计算校准向量", for: .normal)
-        computeCaliParam.frame = CGRect(x: 100, y: 400, width: 200, height: 50)
+        computeCaliParam.frame = CGRect(x: 100, y: 500, width: 200, height: 50)
         computeCaliParam.addTarget(self, action: #selector(showModelCaliVCTapped), for: .touchUpInside)
         view.addSubview(computeCaliParam)
+        
+        let startCaliPredict = UIButton(type: .system)
+        startCaliPredict.setTitle("开始校准测试", for: .normal)
+        startCaliPredict.frame = CGRect(x: 100, y: 600, width: 200, height: 50)
+        startCaliPredict.addTarget(self, action: #selector(caliPredictTapped), for: .touchUpInside)
+        view.addSubview(startCaliPredict)
 
-        // 创建按钮2
-        let startPredict = UIButton(type: .system)
-        startPredict.setTitle("开始正式推理", for: .normal)
-        startPredict.frame = CGRect(x: 100, y: 500, width: 200, height: 50)
-        startPredict.addTarget(self, action: #selector(button2Tapped), for: .touchUpInside)
-        view.addSubview(startPredict)
+
         
         // 创建按钮2
         let buttonTest = UIButton(type: .system)
         buttonTest.setTitle("debug测试页面", for: .normal)
-        buttonTest.frame = CGRect(x: 100, y: 600, width: 200, height: 50)
+        buttonTest.frame = CGRect(x: 100, y: 700, width: 200, height: 50)
         buttonTest.addTarget(self, action: #selector(buttonTestTapped), for: .touchUpInside)
         view.addSubview(buttonTest)
     }
@@ -90,6 +99,17 @@ class ViewController: UIViewController{
         testVC.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(testVC, animated: true)
         print("打开了测试页面")
+    }
+    
+    // 这次进行校准测试
+    @objc func caliPredictTapped() {
+        print("开始进行校准后测试")
+//        let calipredictVC = CaliPredictViewController()
+//        calipredictVC.modalPresentationStyle = .fullScreen
+//        navigationController?.pushViewController(calipredictVC, animated: true)
+        let cvsVC =  caliVecSelectViewController()
+        cvsVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(cvsVC, animated: true)
     }
     
     

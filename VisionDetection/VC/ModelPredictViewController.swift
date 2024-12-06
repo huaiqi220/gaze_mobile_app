@@ -17,7 +17,7 @@ class ModelPredictViewController: UIViewController {
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     var videoOutput: AVCaptureVideoDataOutput!
     var caliFeatureID: String?
-    var model: aff_net_ma?
+    var model: cges_inf?
     let sequenceHandler = VNSequenceRequestHandler()
     var coordinateLabel: UILabel!
     var frameCounter = 0
@@ -77,7 +77,7 @@ class ModelPredictViewController: UIViewController {
         do{
             let config = MLModelConfiguration()
             config.computeUnits = .all
-            model = try aff_net_ma(configuration: config)
+            model = try cges_inf(configuration: config)
         }catch{
             print("模型加载抛出异常")
             return
@@ -190,13 +190,16 @@ class ModelPredictViewController: UIViewController {
                     guard let facema = result["face"] as? MLMultiArray,
                           let lma = result["left"] as? MLMultiArray,
                           let rma = result["right"] as? MLMultiArray,
-                          let may = result["rect"] as? MLMultiArray else{
+                          let may = result["rect"] as? MLMultiArray,
+                          let all0cali = create1DZeroArray(size:12) else{
                         print("返回来的图像有空")
                         return
                     }
-                    let input = aff_net_maInput(leftEyeImg:lma,rightEyeImg: rma,faceImg: facema,faceGridImg: may)
+                    
+                    
+                    let input = cges_infInput(face: facema,left_:lma,right_: rma,rects: may,cali:all0cali)
                     do{
-                        let res = try self.model?.prediction(input: input).linear_35
+                        let res = try self.model?.prediction(input: input).linear_11
                         if let x = res?[0].doubleValue, let y = res?[1].doubleValue {
                             print(x,y)
                             let timestamp = Date().timeIntervalSince1970 * 1000

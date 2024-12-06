@@ -27,4 +27,15 @@ class AppConfig {
     func get<T>(key: String, defaultValue: T) -> T {
         return config[key] as? T ?? defaultValue
     }
+    
+    // 根据 key 存储数组
+    func setArray<T>(key: String, array: [T]) {
+        config[key] = array
+    }
+    
+    // 根据 key 获取数组
+    func getArray<T>(key: String, defaultValue: [T]) -> [T] {
+        return config[key] as? [T] ?? defaultValue
+    }
+    
 }

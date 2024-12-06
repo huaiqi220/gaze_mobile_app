@@ -56,3 +56,28 @@ func loadMLMultiArray(withKey key: Int, shape: [NSNumber], dataType: MLMultiArra
     
     return array
 }
+
+
+func convertMLMultiArrayToArray(_ mlMultiArray: MLMultiArray) -> [Double]? {
+    // 确保输入是 1 维数组
+    guard mlMultiArray.shape.count == 1 else {
+        print("The MLMultiArray is not one-dimensional.")
+        return nil
+    }
+    
+    // 获取长度
+    let length = mlMultiArray.shape[0].intValue
+    
+    // 创建数组
+    var result: [Double] = []
+    result.reserveCapacity(length)
+    
+    // 遍历 MLMultiArray 并将值添加到数组中
+    for i in 0..<length {
+        result.append(mlMultiArray[i].doubleValue)
+    }
+    
+    return result
+}
+
+

@@ -17,149 +17,344 @@ import Vision
 import CoreML
 import ImageIO
 
-
-class testViewController: UIViewController{
-    private let face_image_size = CGSize(width: 112, height: 112)
-    private let eye_image_size = CGSize(width: 224, height: 224)
-    private var face_renderer = UIGraphicsImageRenderer()
-    private var eye_renderer = UIGraphicsImageRenderer()
-    private var imageView: UIImageView!
+class testViewController: UIViewController {
+    var featureModel: cges_encoder?
+    var gazeModel: cges_decoder?
+    var infModel: cges_inf?
+    var case_id:String?
     
     private var batchCache: [[String: MLMultiArray]] = [] // 缓存每张图片的结果
-    private let batchSize = 9 // 批量大小
+    private var batchLabel: [[String: MLMultiArray]] = []
+
+    private let progressView = UIProgressView(progressViewStyle: .default) // 进度条
+    private let logTextView = UITextView() // 用于显示日志的文本框
+    private let updateQueue = DispatchQueue(label: "com.testViewController.updateQueue", attributes: .concurrent)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        face_renderer = UIGraphicsImageRenderer(size: self.face_image_size)
-        eye_renderer = UIGraphicsImageRenderer(size: self.eye_image_size)
+        setupUI()
         
-        // 展示debug图片
-        imageView = UIImageView(frame: self.view.bounds) // 使其填满整个屏幕
-        imageView.contentMode = .scaleAspectFit // 使图像保持比例
+        
+//        startCalibration()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.startCalibration()
+        }
+    }
+    
+    private func setupUI() {
         view.backgroundColor = .white
         
-        // 获取选中目录的路径
-        if let customDirectory = ModelCaliViewController.getCustomDirectory(caseID: "32") {
-            // 遍历选中目录中的图片文件，执行人脸特征检测
-            let imageFiles = ModelCaliViewController.getImageFiles(from: customDirectory)
-            var index = 1
-            for imageURL in imageFiles {
-                if var image = UIImage(contentsOfFile: imageURL.path)?.fixedOrientation(){
-                    
-                    guard let cgImage = image.cgImage else { return }
-                    image = UIImage(cgImage: cgImage,scale: image.scale, orientation: .upMirrored)
-                    guard let quartzImage = image.cgImage else {return}
-                    index = index + 1
-                    
-
-                    detectFaceLandmarks(in: image) { faceObservation in
-                        if let faceObservation = faceObservation{
-                            let newSize = CGSizeMake(112, 112); // 你希望调整的目标大小
-                            let interpolation = 1; // 插值方法
-                            
-                            
-                            let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation))
-                            
-                            guard var facema = result["face"] as? MLMultiArray,
-                                  var lma = result["left"] as? MLMultiArray,
-                                  var rma = result["right"] as? MLMultiArray,
-                                  var may = result["rect"] as? MLMultiArray else{
-                                print("返回来的图像有空")
-                                return
-                            }
-                            
-                            // 添加到缓存
-                            let resultDict = ["face": facema, "left": lma, "right": rma, "rect": may]
-                            self.batchCache.append(resultDict)
-                            // 批量处理
-                            if self.batchCache.count == self.batchSize {
-                                self.processBatch()
-                            }
-                            
-//                            let resultDictionary = getCaliDataFeature(image1: facema, image2: lma, image3: rma, multiArray: may)
-//                            print("----")
-//                            print("正在处理图片: \(imageURL.lastPathComponent)")
-//                            print(resultDictionary)
-//                            print("----")
-  
-
-                        }else{
-                            print("未检测到人脸特征")
-                        }
-
-                    }
-
-                } else {
-                    print("无法加载图片: \(imageURL.lastPathComponent)")
-                }
-
-            }
+        // 设置日志文本框
+        logTextView.translatesAutoresizingMaskIntoConstraints = false
+        logTextView.isEditable = false
+        logTextView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        view.addSubview(logTextView)
+        
+        
+        // 设置进度条
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.progress = 0.0
+        view.addSubview(progressView)
+        
+        // 布局
+        NSLayoutConstraint.activate([
+            // 日志文本框
+            logTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            logTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            logTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            logTextView.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -10),
             
+            // 进度条
+            progressView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            progressView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8)
+        ])
+    }
+    
+    private func loadModels() {
+        do {
+            let config = MLModelConfiguration()
+            config.computeUnits = .cpuAndGPU
+            featureModel = try cges_encoder(configuration: config)
+            gazeModel = try cges_decoder(configuration: config)
+            updateUI(log: "Models loaded successfully")
+        } catch {
+            print("Feature model loading failed with error: \(error)")
+            updateUI(log: "Feature model loading failed with error: \(error)")
+        }
+    }
+    
+    
+    @objc private func startCalibration() {
+        
+        //取得目前选择的id
+        
+        loadModels()
+        
+        guard let caseId = case_id else {
+            // 提示用户输入 Case ID
+            print("样例id未设置")
+            updateUI(log: "样例id未设置")
+            return
         }
         
+        // 获取选中目录的路径
+        guard let customDirectory = ModelCaliViewController.getCustomDirectory(caseID: caseId) else {
+            print("Custom directory not found")
+            updateUI(log: "Custom directory not found")
+            return
+        }
         
+        // 遍历选中目录中的图片文件，执行人脸特征检测
+        let imageFiles = ModelCaliViewController.getImageFiles(from: customDirectory)
+        progressView.progress = 0.0
+        
+        let dispatchGroup = DispatchGroup()
+        var index = 1
+        
+        for imageURL in imageFiles {
+            print("正在处理图片：")
+            print(imageURL)
+            self.updateUI(log: "正在处理图片: \(imageURL)")
+            var location = extractSegments(from:imageURL.absoluteString)
+            var label = createMLMultiArray(from:location.0, verticalSegment:location.1)
+            if var image = UIImage(contentsOfFile: imageURL.path)?.fixedOrientation() {
+                guard let cgImage = image.cgImage else {
+                    dispatchGroup.leave()
+                    return }
+                image = UIImage(cgImage: cgImage, scale: image.scale, orientation: .upMirrored)
+                guard let quartzImage = image.cgImage else { 
+                    dispatchGroup.leave()
+                    return }
+                
+                dispatchGroup.enter()
+                index += 1
+                
+                detectFaceLandmarks(in: image) { [self] faceObservation in
+                    defer { dispatchGroup.leave() }
+                    if let faceObservation = faceObservation {
+                        let newSize = CGSize(width: 112, height: 112)
+                        let interpolation = 1
+                        
+                        let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation))
+                        
+                        guard let facema = result["face"] as? MLMultiArray,
+                              let lma = result["left"] as? MLMultiArray,
+                              let rma = result["right"] as? MLMultiArray,
+                              let may = result["rect"] as? MLMultiArray,
+                              let cmlabel = label else {
+                            print("Returned image data is nil")
+                            self.updateUI(log: "Returned image data is nil")
+                            return
+                        }
+                        
+                        let resultDict = ["face": facema, "left": lma, "right": rma, "rect": may]
+                        let pl = ["label": cmlabel]
+                        DispatchQueue.main.async {
+                            self.batchCache.append(resultDict)
+                            self.batchLabel.append(pl)
+                        }
+                    } else {
+                        print("No face landmarks detected")
+                        self.updateUI(log: "No face landmarks detected")
+                    }
+                }
+            } else {
+                print("Unable to load image: \(imageURL.lastPathComponent)")
+                self.updateUI(log: "Unable to load image: \(imageURL.lastPathComponent)")
+                dispatchGroup.leave()
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            self.progressView.setProgress(1.0, animated: true)
+//            print("All images processed")
+            self.updateUI(progress: 1.0, log: "All images processed. Starting batch processing.")
+            self.processBatch() // Process the batch after all images are processed
+        }
     }
     
     private func processBatch() {
-        print("正在处理批量图片，数量: \(batchCache.count)")
+        guard !batchCache.isEmpty else {
+            print("No processed images to work with")
+            updateUI(log: "No processed images to work with")
+            return
+        }
         
-        // 提取 face、left、right 的 NHWC 堆叠
         let faceArrays = batchCache.compactMap { $0["face"] }
         let leftArrays = batchCache.compactMap { $0["left"] }
         let rightArrays = batchCache.compactMap { $0["right"] }
         let rects = batchCache.compactMap { $0["rect"] }
         
+        let mllabel = batchLabel.compactMap { $0["label"]}
         guard let stackedFace = stackMultiArray(faceArrays),
               let stackedLeft = stackMultiArray(leftArrays),
               let stackedRight = stackMultiArray(rightArrays),
-              let stackedRects = stackMultiArray(rects) else {
-            print("批量堆叠失败")
+              let stackedRects = stackMultiArray(rects),
+              let stackedLabel = stackMultiArray(mllabel) else {
+            print("Batch stacking failed")
+            updateUI(log: "Batch stacking failed")
             return
         }
         
-        // 批量推理逻辑（可以根据需求修改这里的代码）
-        let resultDictionary = getCaliDataFeature(image1: stackedFace, image2: stackedLeft, image3: stackedRight, multiArray: stackedRects)
-        print("----")
-        print(resultDictionary?.count)
-        print("----")
+        print("All tensors stacked successfully, starting inference")
+        updateUI(log: "All tensors stacked successfully, starting inference")
         
-        // 清空缓存
-        batchCache.removeAll()
+        let featureInput = cges_encoderInput(face: stackedFace, left_: stackedLeft, right_: stackedRight, rects: stackedRects)
+        var feature: MLMultiArray?
+        do {
+            feature = try featureModel?.prediction(input: featureInput).linear_8
+            print("Feature extraction successful")
+            updateUI(log: "Feature extraction successful")
+        } catch {
+            print("Feature extraction failed")
+            updateUI(log: "Feature extraction failed")
+            return
+        }
+        
+        guard let unwrappedFeature = feature else {
+            print("Feature is nil")
+            updateUI(log: "Feature is nil")
+            return
+        }
+        
+        computeCalibrationVectors(with: unwrappedFeature, label: stackedLabel)
+    }
+    
+    private func computeCalibrationVectors(with feature: MLMultiArray, label : MLMultiArray) {
+        let k = 12
+        let totalCalibrations = 1 << k // 2^k
+        var calibrationVectors: [MLMultiArray] = []
+        var minError: Double = Double.greatestFiniteMagnitude
+        var bestCalibrationVector: [Double] = []
+        
+        for i in 0..<totalCalibrations {
+            var calibrationVector = [Int](repeating: 0, count: k)
+            for j in 0..<k {
+                calibrationVector[j] = (i >> j) & 1
+            }
+            
+            if let mlArray = try? MLMultiArray(shape: [NSNumber(value: k)], dataType: .float32) {
+                for index in 0..<k {
+                    mlArray[index] = NSNumber(value: Float(calibrationVector[index]))
+                }
+                calibrationVectors.append(mlArray)
+            } else {
+                print("Failed to create MLMultiArray for calibration vector: \(calibrationVector)")
+                updateUI(log: "Failed to create MLMultiArray for calibration vector: \(calibrationVector)")
+            }
+        }
+        
+        for (index, caliVec) in calibrationVectors.enumerated() {
+            print("当前校准向量为")
+            if index % 200 == 0 {
+                updateUI(log:"这是第\(index)次校准")
+                updateUI(log: "当前校准向量为: \(caliVec)")
+            }
+            print(caliVec)
+            let gazeInput = cges_decoderInput(cali: caliVec, fc1: feature)
+            do {
+                let res = try gazeModel?.prediction(input: gazeInput).linear_2
+                if let error = averageEuclideanDistance(gaze: res!,label: label){
+                    if error < minError {
+                        minError = error
+                        bestCalibrationVector = (0..<k).map { Double(truncating: caliVec[$0]) }
+                    }
+                }else{
+                    print("error类型不对")
+                    updateUI(log: "Error type mismatch")
+                }
+                
+            } catch {
+                print("Gaze inference failed for calibration vector \(index + 1)")
+                updateUI(log: "Gaze inference failed for calibration vector \(index + 1)")
+            }
+        }
+        AppConfig.shared.setArray(key: case_id!, array: bestCalibrationVector)
+        updateUI(log: "Best calibration vector: \(bestCalibrationVector)")
+        updateUI(log: "Calibration vector has been saved to AppConfig")
+        print("最佳校准向量为：")
+        print(bestCalibrationVector)
+        print("校准向量已经写到了Appconfig")
+        
     }
     
     // 工具方法：将多个 MLMultiArray 堆叠为一个 NHWC 的 MLMultiArray
     private func stackMultiArray(_ arrays: [MLMultiArray]) -> MLMultiArray? {
         guard let first = arrays.first else { return nil }
-        
-        // 确定新维度大小
         let shape = first.shape.map { $0.intValue }
         let batchSize = arrays.count
-        let newShape = [batchSize] + shape // 添加批量维度
+        let newShape = [batchSize] + shape
         
-        // 创建新的 MLMultiArray
-        let stackedArray = try? MLMultiArray(shape: newShape as [NSNumber], dataType: first.dataType)
-        
-        guard let result = stackedArray else { return nil }
-        
-        // 填充堆叠后的数据
-        for (batchIndex, array) in arrays.enumerated() {
-            let offset = batchIndex * shape.reduce(1, *)
-            for i in 0..<array.count {
-                result[offset + i] = array[i]
-            }
+        guard let stackedArray = try? MLMultiArray(shape: newShape.map { NSNumber(value: $0) }, dataType: first.dataType) else {
+            return nil
         }
         
-        return result
+        let totalElementsPerArray = shape.reduce(1, *)
+        
+        if first.dataType == .double {
+            let stackedArrayPtr = stackedArray.dataPointer.bindMemory(to: Double.self, capacity: stackedArray.count)
+            for (batchIndex, array) in arrays.enumerated() {
+                let arrayPtr = array.dataPointer.bindMemory(to: Double.self, capacity: array.count)
+                let destPtr = stackedArrayPtr.advanced(by: batchIndex * totalElementsPerArray)
+                destPtr.assign(from: arrayPtr, count: totalElementsPerArray)
+            }
+        } else if first.dataType == .float32 {
+            let stackedArrayPtr = stackedArray.dataPointer.bindMemory(to: Float32.self, capacity: stackedArray.count)
+            for (batchIndex, array) in arrays.enumerated() {
+                let arrayPtr = array.dataPointer.bindMemory(to: Float32.self, capacity: array.count)
+                let destPtr = stackedArrayPtr.advanced(by: batchIndex * totalElementsPerArray)
+                destPtr.assign(from: arrayPtr, count: totalElementsPerArray)
+            }
+        } else if first.dataType == .int32 {
+            let stackedArrayPtr = stackedArray.dataPointer.bindMemory(to: Int32.self, capacity: stackedArray.count)
+            for (batchIndex, array) in arrays.enumerated() {
+                let arrayPtr = array.dataPointer.bindMemory(to: Int32.self, capacity: array.count)
+                let destPtr = stackedArrayPtr.advanced(by: batchIndex * totalElementsPerArray)
+                destPtr.assign(from: arrayPtr, count: totalElementsPerArray)
+            }
+        } else {
+            print("Unsupported data type: \(first.dataType)")
+            return nil
+        }
+        
+        return stackedArray
+    }
+    
+    func extractSegments(from urlString: String) -> (horizontal: String?, vertical: String?) {
+        guard let url = URL(string: urlString) else {
+            return (nil, nil)
+        }
+        let lastPathComponent = url.lastPathComponent
+        let components = lastPathComponent.components(separatedBy: "_")
+        guard components.count >= 4 else {
+            return (nil, nil)
+        }
+        let horizontalSegment = components[1]
+        let verticalSegment = components[2]
+        return (horizontalSegment, verticalSegment)
+    }
+    
+    private func updateUI(progress: Float? = nil, log: String? = nil) {
+        updateQueue.async(flags: .barrier) {
+            DispatchQueue.main.async {
+                if let progress = progress {
+                    self.progressView.setProgress(progress, animated: true)
+                }
+                if let log = log {
+                    let currentText = self.logTextView.text ?? ""
+                    self.logTextView.text = "\(currentText)\n\(log)"
+                    let bottom = NSMakeRange(self.logTextView.text.count - 1, 1)
+                    self.logTextView.scrollRangeToVisible(bottom)
+                }
+            }
+        }
     }
 
 }
 
-
-func printMultiArray(_ multiArray: MLMultiArray) {
-    let count = multiArray.count
-    var elements: [Float] = []
-    for i in 0..<count {
-        elements.append(multiArray[i].floatValue)
-    }
-    print(elements)
-}
