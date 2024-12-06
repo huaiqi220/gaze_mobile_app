@@ -119,7 +119,7 @@
 
 + (NSDictionary *)preprocess:(UIImage *)image withFaceObservation:(VNFaceObservation *)faceObservation withSize:(CGSize)newSize interpolation:(int)interpolation {
     // 将 UIImage 转换为 cv::Mat
-    std::cout << "oc1" << std::endl;
+//    std::cout << "oc1" << std::endl;
     cv::Mat mat;
     [image convertToMat:&mat :false];
 
@@ -131,7 +131,7 @@
 
     CGSize imageSize = image.size;
     // 这里获得面部的bbox
-    std::cout << "oc2" << std::endl;
+//    std::cout << "oc2" << std::endl;
     CGRect boundingBox = faceObservation.boundingBox;
 
     // 将边界框坐标转换为图像坐标系统
@@ -139,7 +139,7 @@
     CGFloat y = boundingBox.origin.y * imageSize.height;
     CGFloat width = boundingBox.size.width * imageSize.width;
     CGFloat height = boundingBox.size.height * imageSize.height;
-    std::cout << "oc3" << std::endl;
+//    std::cout << "oc3" << std::endl;
     // 裁剪面部区域
 //    cv::Rect faceRect(static_cast<int>(x), static_cast<int>(imageSize.height - (y + height)), static_cast<int>(width), static_cast<int>(height));
     
@@ -153,7 +153,7 @@
     // 创建裁剪区域
     cv::Rect faceRect(x_start, y_start, rect_width, rect_height);
     cv::Mat faceCrop = mat(faceRect);
-    std::cout << "oc4" << std::endl;
+//    std::cout << "oc4" << std::endl;
 
     // 获取眼睛的地标并裁剪眼睛区域
     VNFaceLandmarks2D *landmarks = faceObservation.landmarks;
