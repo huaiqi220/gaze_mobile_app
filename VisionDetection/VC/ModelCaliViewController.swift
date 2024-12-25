@@ -120,9 +120,9 @@ class ModelCaliViewController: UIViewController, UIPickerViewDelegate, UIPickerV
             return
         }
         
-        let testVC = testViewController()
-        testVC.case_id = selectedFolder
-        navigationController?.pushViewController(testVC, animated: true)
+        let calVC = CalcuTheCaliVector()
+        calVC.case_id = selectedFolder
+        navigationController?.pushViewController(calVC, animated: true)
     }
     
     

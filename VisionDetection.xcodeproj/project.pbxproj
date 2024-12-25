@@ -14,6 +14,16 @@
 		02611D9E1EEA5317009714B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02611D9C1EEA5317009714B8 /* LaunchScreen.storyboard */; };
 		02611DA61EEA5683009714B8 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02611DA51EEA5683009714B8 /* PreviewView.swift */; };
 		2849C929220ABCBE000977F1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2849C928220ABCBE000977F1 /* Extensions.swift */; };
+		942170482D017F2D004A20CE /* CaliPredictViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942170472D017F2D004A20CE /* CaliPredictViewController.swift */; };
+		942170492D0183C0004A20CE /* AppConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94D7441D2CD22B7A00C56FFA /* AppConfig.plist */; };
+		9421704B2D01D3EB004A20CE /* cges_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 9421704A2D01D3EB004A20CE /* cges_encoder.mlpackage */; };
+		9421704D2D01F88B004A20CE /* cges_decoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 9421704C2D01F88B004A20CE /* cges_decoder.mlpackage */; };
+		9421704F2D02E910004A20CE /* GazeUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9421704E2D02E910004A20CE /* GazeUtil.swift */; };
+		942170512D0303A9004A20CE /* jsonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942170502D0303A9004A20CE /* jsonUtil.swift */; };
+		942170532D030CB7004A20CE /* caliVecSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942170522D030CB7004A20CE /* caliVecSelectViewController.swift */; };
+		942170562D1C466D004A20CE /* aff_net_baseline.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 942170542D1C466D004A20CE /* aff_net_baseline.mlpackage */; };
+		942170572D1C466D004A20CE /* aff_net_p30special.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 942170552D1C466D004A20CE /* aff_net_p30special.mlpackage */; };
+		942170592D1C4948004A20CE /* AffPredictViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942170582D1C4948004A20CE /* AffPredictViewController.swift */; };
 		94715B7F2D006953006D21C9 /* cges_getfeature.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 94715B7C2D006951006D21C9 /* cges_getfeature.mlpackage */; };
 		94715B802D006953006D21C9 /* cges_getgaze.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 94715B7D2D006952006D21C9 /* cges_getgaze.mlpackage */; };
 		94715B812D006953006D21C9 /* cges_inf.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 94715B7E2D006953006D21C9 /* cges_inf.mlpackage */; };
@@ -35,7 +45,7 @@
 		94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */; };
 		94B279D92CC01F4700D41BD0 /* MLInferenceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */; };
 		94B279DB2CC0A75D00D41BD0 /* ImageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279DA2CC0A75D00D41BD0 /* ImageUtil.swift */; };
-		94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279E22CC0B67600D41BD0 /* testViewController.swift */; };
+		94B279E32CC0B67600D41BD0 /* CalcuTheCaliVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B279E22CC0B67600D41BD0 /* CalcuTheCaliVector.swift */; };
 		94D7441F2CD22C9200C56FFA /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D7441E2CD22C9200C56FFA /* AppConfig.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +59,15 @@
 		02611D9F1EEA5317009714B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02611DA51EEA5683009714B8 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		2849C928220ABCBE000977F1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		942170472D017F2D004A20CE /* CaliPredictViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaliPredictViewController.swift; sourceTree = "<group>"; };
+		9421704A2D01D3EB004A20CE /* cges_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_encoder.mlpackage; sourceTree = "<group>"; };
+		9421704C2D01F88B004A20CE /* cges_decoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_decoder.mlpackage; sourceTree = "<group>"; };
+		9421704E2D02E910004A20CE /* GazeUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GazeUtil.swift; sourceTree = "<group>"; };
+		942170502D0303A9004A20CE /* jsonUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jsonUtil.swift; sourceTree = "<group>"; };
+		942170522D030CB7004A20CE /* caliVecSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = caliVecSelectViewController.swift; sourceTree = "<group>"; };
+		942170542D1C466D004A20CE /* aff_net_baseline.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = aff_net_baseline.mlpackage; sourceTree = "<group>"; };
+		942170552D1C466D004A20CE /* aff_net_p30special.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = aff_net_p30special.mlpackage; sourceTree = "<group>"; };
+		942170582D1C4948004A20CE /* AffPredictViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffPredictViewController.swift; sourceTree = "<group>"; };
 		94715B7C2D006951006D21C9 /* cges_getfeature.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_getfeature.mlpackage; sourceTree = "<group>"; };
 		94715B7D2D006952006D21C9 /* cges_getgaze.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_getgaze.mlpackage; sourceTree = "<group>"; };
 		94715B7E2D006953006D21C9 /* cges_inf.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = cges_inf.mlpackage; sourceTree = "<group>"; };
@@ -74,7 +93,7 @@
 		94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCaliViewController.swift; sourceTree = "<group>"; };
 		94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLInferenceUtil.swift; sourceTree = "<group>"; };
 		94B279DA2CC0A75D00D41BD0 /* ImageUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtil.swift; sourceTree = "<group>"; };
-		94B279E22CC0B67600D41BD0 /* testViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testViewController.swift; sourceTree = "<group>"; };
+		94B279E22CC0B67600D41BD0 /* CalcuTheCaliVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalcuTheCaliVector.swift; sourceTree = "<group>"; };
 		94D7441D2CD22B7A00C56FFA /* AppConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppConfig.plist; sourceTree = "<group>"; };
 		94D7441E2CD22C9200C56FFA /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,7 +180,11 @@
 		94B279DD2CC0B3CD00D41BD0 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				9421704A2D01D3EB004A20CE /* cges_encoder.mlpackage */,
+				9421704C2D01F88B004A20CE /* cges_decoder.mlpackage */,
 				94715B7C2D006951006D21C9 /* cges_getfeature.mlpackage */,
+				942170542D1C466D004A20CE /* aff_net_baseline.mlpackage */,
+				942170552D1C466D004A20CE /* aff_net_p30special.mlpackage */,
 				94715B7D2D006952006D21C9 /* cges_getgaze.mlpackage */,
 				94715B7E2D006953006D21C9 /* cges_inf.mlpackage */,
 				948AF6A92CCA3E7600AB6FD5 /* aff_net_ma.mlpackage */,
@@ -176,6 +199,8 @@
 				94B279D82CC01F4700D41BD0 /* MLInferenceUtil.swift */,
 				94B279DA2CC0A75D00D41BD0 /* ImageUtil.swift */,
 				9471BC8E2CC92D29008E7A05 /* dataUtil.swift */,
+				9421704E2D02E910004A20CE /* GazeUtil.swift */,
+				942170502D0303A9004A20CE /* jsonUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -183,7 +208,7 @@
 		94B279E62CC0D70D00D41BD0 /* VC */ = {
 			isa = PBXGroup;
 			children = (
-				94B279E22CC0B67600D41BD0 /* testViewController.swift */,
+				94B279E22CC0B67600D41BD0 /* CalcuTheCaliVector.swift */,
 				94B279D62CC01C5900D41BD0 /* ModelCaliViewController.swift */,
 				94B279D42CBFA5E000D41BD0 /* CaliHelperViewController.swift */,
 				94B279CF2CBF89CD00D41BD0 /* CameraViewController.swift */,
@@ -191,6 +216,9 @@
 				94B279D22CBF9AA300D41BD0 /* ImageGalleryViewController.swift */,
 				9471BC902CC92F3F008E7A05 /* ModelPredictViewController.swift */,
 				9471BC922CC932EF008E7A05 /* PredictHelperViewController.swift */,
+				942170472D017F2D004A20CE /* CaliPredictViewController.swift */,
+				942170522D030CB7004A20CE /* caliVecSelectViewController.swift */,
+				942170582D1C4948004A20CE /* AffPredictViewController.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -255,6 +283,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				942170492D0183C0004A20CE /* AppConfig.plist in Resources */,
 				02611D9E1EEA5317009714B8 /* LaunchScreen.storyboard in Resources */,
 				02611D9B1EEA5317009714B8 /* Assets.xcassets in Resources */,
 				02611D991EEA5317009714B8 /* Main.storyboard in Resources */,
@@ -268,22 +297,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9421704D2D01F88B004A20CE /* cges_decoder.mlpackage in Sources */,
 				94B279D52CBFA5E000D41BD0 /* CaliHelperViewController.swift in Sources */,
 				94715B7F2D006953006D21C9 /* cges_getfeature.mlpackage in Sources */,
 				94B279DB2CC0A75D00D41BD0 /* ImageUtil.swift in Sources */,
+				942170482D017F2D004A20CE /* CaliPredictViewController.swift in Sources */,
+				9421704B2D01D3EB004A20CE /* cges_encoder.mlpackage in Sources */,
 				9471BC932CC932EF008E7A05 /* PredictHelperViewController.swift in Sources */,
 				9477DB732CC67DDF00C40251 /* OpenCVWrapper.mm in Sources */,
+				942170592D1C4948004A20CE /* AffPredictViewController.swift in Sources */,
 				9471BC8F2CC92D29008E7A05 /* dataUtil.swift in Sources */,
 				94B279D72CC01C5900D41BD0 /* ModelCaliViewController.swift in Sources */,
-				94B279E32CC0B67600D41BD0 /* testViewController.swift in Sources */,
+				94B279E32CC0B67600D41BD0 /* CalcuTheCaliVector.swift in Sources */,
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
+				9421704F2D02E910004A20CE /* GazeUtil.swift in Sources */,
+				942170512D0303A9004A20CE /* jsonUtil.swift in Sources */,
 				94715B802D006953006D21C9 /* cges_getgaze.mlpackage in Sources */,
 				94B279D02CBF89CD00D41BD0 /* CameraViewController.swift in Sources */,
 				94715B812D006953006D21C9 /* cges_inf.mlpackage in Sources */,
 				94D7441F2CD22C9200C56FFA /* AppConfig.swift in Sources */,
 				948AF6AA2CCA3E7600AB6FD5 /* aff_net_ma.mlpackage in Sources */,
+				942170532D030CB7004A20CE /* caliVecSelectViewController.swift in Sources */,
+				942170572D1C466D004A20CE /* aff_net_p30special.mlpackage in Sources */,
 				9471BC8D2CC8D050008E7A05 /* aff_net.mlpackage in Sources */,
 				9471BC912CC92F3F008E7A05 /* ModelPredictViewController.swift in Sources */,
+				942170562D1C466D004A20CE /* aff_net_baseline.mlpackage in Sources */,
 				94B279D32CBF9AA300D41BD0 /* ImageGalleryViewController.swift in Sources */,
 				94B279D92CC01F4700D41BD0 /* MLInferenceUtil.swift in Sources */,
 				02611D941EEA5317009714B8 /* AppDelegate.swift in Sources */,

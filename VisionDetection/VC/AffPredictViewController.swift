@@ -1,29 +1,26 @@
 //
-//  CaliPredictViewController.swift
+//  AffPredictViewController.swift
 //  VisionDetection
 //
-//  Created by zhuziyang on 2024/12/5.
+//  Created by zhuziyang on 2024/12/25.
 //  Copyright © 2024 Willjay. All rights reserved.
 //
-
 
 import UIKit
 import AVFoundation
 import CoreML
 import Vision
 
-class CaliPredictViewController: UIViewController {
+class AffPredictViewController: UIViewController {
     var captureSession: AVCaptureSession!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     var videoOutput: AVCaptureVideoDataOutput!
     var caliFeatureID: String?
-    var model: cges_inf?
+    var model: aff_net_p30special?
     let sequenceHandler = VNSequenceRequestHandler()
     var coordinateLabel: UILabel!
     var frameCounter = 0
     var period = AppConfig.shared.get(key: "FaceDetectionPeriod", defaultValue: 5)
-    
-    var cali_vec:MLMultiArray?
     
     
     // 持久化人脸检测请求
@@ -59,13 +56,11 @@ class CaliPredictViewController: UIViewController {
         }
         // 保存当前的 completion 回调以在请求结束时使用
         self.currentCompletion = completion
-        let startTime = Date().timeIntervalSince1970 * 1000
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             do {
                 try self.sequenceHandler.perform([self.faceLandmarksRequest], on: cgImage)
-                let endTime = Date().timeIntervalSince1970 * 1000
-                print("面部检测 time: \(endTime - startTime) ms")
             } catch {
                 print("无法执行人脸检测请求: \(error.localizedDescription)")
                 completion(nil)
@@ -76,19 +71,16 @@ class CaliPredictViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        let modelLoadStart = Date().timeIntervalSince1970 * 1000
         
+    
         do{
             let config = MLModelConfiguration()
             config.computeUnits = .all
-            model = try cges_inf(configuration: config)
-            let modelLoadEnd = Date().timeIntervalSince1970 * 1000
-            print("模型加载 time: \(modelLoadEnd - modelLoadStart) ms")
+            model = try aff_net_p30special(configuration: config)
         }catch{
             print("模型加载抛出异常")
             return
         }
-    
         
         // 设置相机捕捉会话
         captureSession = AVCaptureSession()
@@ -97,11 +89,13 @@ class CaliPredictViewController: UIViewController {
         // 逻辑可以多写点
         if imageShape == "1280*720"{
             captureSession.sessionPreset = .hd1280x720
+        }else if imageShape == "640*480"{
+            captureSession.sessionPreset = .vga640x480
         }else{
             captureSession.sessionPreset = .hd1920x1080
         }
         
-//        print("32")
+
         guard let backCamera = AVCaptureDevice.default(for: .video) else {
             print("无法访问相机")
             return
@@ -111,6 +105,7 @@ class CaliPredictViewController: UIViewController {
             return
         }
         
+//        printSupportedFormats(for: frontCamera)
 
         do {
             let input = try AVCaptureDeviceInput(device: frontCamera)
@@ -190,34 +185,30 @@ class CaliPredictViewController: UIViewController {
             if let faceObservation = faceObservation{
                 // 在后台队列中执行耗时操作
                 DispatchQueue.global(qos: .userInitiated).async {
-                    let preprocessStart = Date().timeIntervalSince1970 * 1000
                     let newSize = CGSizeMake(112, 112); // 你希望调整的目标大小
                     let interpolation = 1; // 插值方法
-                    let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation),faceSize: 112,eyeSize: 224)
-                    let preprocessEnd = Date().timeIntervalSince1970 * 1000
-                    print("图像处理 time: \(preprocessEnd - preprocessStart) ms")
+                    let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation),faceSize: 224,eyeSize: 112)
                     guard let facema = result["face"] as? MLMultiArray,
                           let lma = result["left"] as? MLMultiArray,
                           let rma = result["right"] as? MLMultiArray,
-                          let may = result["rect"] as? MLMultiArray,
-                          let speccali = self.cali_vec else{
+                          let may = result["rect"] as? MLMultiArray else{
                         print("返回来的图像有空")
                         return
                     }
-                    
-                    let input = cges_infInput(face: facema,left_:lma,right_: rma,rects: may,cali:speccali)
+                    let input = aff_net_p30specialInput(leftEyeImg:lma,rightEyeImg: rma,faceImg: facema,faceGridImg: may)
                     do{
-                        let inferenceStart = Date().timeIntervalSince1970 * 1000
-                        let res = try self.model?.prediction(input: input).linear_11
-                        let inferenceEnd = Date().timeIntervalSince1970 * 1000
-                        print("模型推理 time: \(inferenceEnd - inferenceStart) ms")
-
+                        let res = try self.model?.prediction(input: input).linear_35
                         if let x = res?[0].doubleValue, let y = res?[1].doubleValue {
+                            print(x,y)
+                            let pixelPoint = convertGazeToPixel(gazeX: x, gazeY: y)
+                            print("Pixel Coordinates: \(pixelPoint)")
                             let timestamp = Date().timeIntervalSince1970 * 1000
-//                            print("当前毫秒时间: \(timestamp)")
+                            print("当前毫秒时间: \(timestamp)")
                             DispatchQueue.main.async {
                                 // 更新主线程上的 UI
+                                print("5")
                                 self.coordinateLabel.text = "x: \(x), y: \(y)"
+                                self.drawGazePoint(at: pixelPoint)
                             }
                         }
                         
@@ -232,9 +223,8 @@ class CaliPredictViewController: UIViewController {
     }
 }
 
-
 // 扩展 AVCaptureVideoDataOutputSampleBufferDelegate
-extension CaliPredictViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+extension AffPredictViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(
         _ output: AVCaptureOutput,
         didOutput sampleBuffer: CMSampleBuffer,
@@ -259,4 +249,56 @@ extension CaliPredictViewController: AVCaptureVideoDataOutputSampleBufferDelegat
         }
     }
 }
+
+extension AffPredictViewController {
+    func drawGazePoint(at point: CGPoint) {
+        // 移除之前的标记
+        view.layer.sublayers?.filter { $0.name == "gazePoint" }.forEach { $0.removeFromSuperlayer() }
+        
+        // 创建一个圆形图层作为标记
+        let gazeLayer = CAShapeLayer()
+        gazeLayer.name = "gazePoint"
+        let radius: CGFloat = 10.0
+        let path = UIBezierPath(ovalIn: CGRect(x: point.x - radius, y: point.y - radius, width: radius * 2, height: radius * 2))
+        gazeLayer.path = path.cgPath
+        gazeLayer.fillColor = UIColor.red.cgColor
+        view.layer.addSublayer(gazeLayer)
+    }
+}
+
+
+func convertGazeToPixel(gazeX: Double, gazeY: Double) -> CGPoint {
+    // 屏幕的物理尺寸（厘米）
+    let screenWidth_cm: Double = 6.5
+    let screenHeight_cm: Double = 14.0
+    
+    // 摄像头相对于屏幕左上角的坐标（厘米）
+    let cameraOriginX_cm: Double = 3.967
+    let cameraOriginY_cm: Double = 0.473
+    
+    // 获取屏幕的像素分辨率
+    let screenSize = UIScreen.main.bounds.size
+    let screenScale = UIScreen.main.scale
+    let screenWidth_pixels = screenSize.width * screenScale
+    let screenHeight_pixels = screenSize.height * screenScale
+    
+    // 计算每厘米对应的像素数
+    let pixelsPerCmX = screenWidth_pixels / CGFloat(screenWidth_cm)
+    let pixelsPerCmY = screenHeight_pixels / CGFloat(screenHeight_cm)
+    
+    // 将注视点从摄像头坐标系转换到屏幕物理坐标系
+    let screenX_cm = cameraOriginX_cm + gazeX
+    let screenY_cm = cameraOriginY_cm + gazeY
+    
+    // 限制坐标在屏幕范围内
+    let clampedX_cm = max(0, min(screenX_cm, screenWidth_cm))
+    let clampedY_cm = max(0, min(screenY_cm, screenHeight_cm))
+    
+    // 将物理坐标转换为像素坐标
+    let pixelX = CGFloat(clampedX_cm) * pixelsPerCmX
+    let pixelY = CGFloat(clampedY_cm) * pixelsPerCmY
+    
+    return CGPoint(x: pixelX, y: pixelY)
+}
+
 

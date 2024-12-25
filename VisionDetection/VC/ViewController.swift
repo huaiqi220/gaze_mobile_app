@@ -57,6 +57,8 @@ class ViewController: UIViewController{
         buttonTest.frame = CGRect(x: 100, y: 700, width: 200, height: 50)
         buttonTest.addTarget(self, action: #selector(buttonTestTapped), for: .touchUpInside)
         view.addSubview(buttonTest)
+        
+
     }
     
     // 校准数据采集按钮事件
@@ -95,7 +97,7 @@ class ViewController: UIViewController{
     }
     
     @objc func buttonTestTapped(){
-        let testVC = testViewController()
+        let testVC = AffPredictViewController()
         testVC.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(testVC, animated: true)
         print("打开了测试页面")

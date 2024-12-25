@@ -33,7 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)preprocess:(UIImage *)image
              withFaceObservation:(VNFaceObservation *)faceObservation
                        withSize:(CGSize)newSize
-                   interpolation:(int)interpolation;
+                   interpolation:(int)interpolation
+                        faceSize:(int)faceSize
+                         eyeSize:(int)eyeSize;
 
 @end
 

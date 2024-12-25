@@ -186,7 +186,7 @@ class ModelPredictViewController: UIViewController {
                 DispatchQueue.global(qos: .userInitiated).async {
                     let newSize = CGSizeMake(112, 112); // 你希望调整的目标大小
                     let interpolation = 1; // 插值方法
-                    let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation))
+                    let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation),faceSize: 112,eyeSize: 224)
                     guard let facema = result["face"] as? MLMultiArray,
                           let lma = result["left"] as? MLMultiArray,
                           let rma = result["right"] as? MLMultiArray,

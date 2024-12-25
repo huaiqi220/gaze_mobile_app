@@ -17,7 +17,7 @@ import Vision
 import CoreML
 import ImageIO
 
-class testViewController: UIViewController {
+class CalcuTheCaliVector: UIViewController {
     var featureModel: cges_encoder?
     var gazeModel: cges_decoder?
     var infModel: cges_inf?
@@ -141,7 +141,7 @@ class testViewController: UIViewController {
                         let newSize = CGSize(width: 112, height: 112)
                         let interpolation = 1
                         
-                        let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation))
+                        let result = ImageProcessor.preprocess(image, with: faceObservation, with: newSize, interpolation: Int32(interpolation),faceSize: 112,eyeSize: 224)
                         
                         guard let facema = result["face"] as? MLMultiArray,
                               let lma = result["left"] as? MLMultiArray,
